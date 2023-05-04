@@ -2,3 +2,7 @@
 #include <stdlib.h>
 #include "kernel.cu"
 #include "support.h"
+
+int main (int argc, char *argv[]) {
+    printf("haha lmao");
+}
