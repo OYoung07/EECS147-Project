@@ -6,5 +6,6 @@
 #include "body.h"
 
 int main (int argc, char *argv[]) {
+    Timer timer;
     printf("haha lmao");
 }
