@@ -8,8 +8,7 @@ LD_FLAGS    = -lcudart
 EXE         = reduction
 OBJ         = main.o support.o
 
-default: naive optimized
-
+default:
 
 main-optimized.o: main.cu kernel.cu support.h
     $(NVCC) -c -o $@ main.cu $(NVCC_FLAGS) -DOPTIMIZED
