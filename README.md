@@ -3,16 +3,16 @@ Simulation of planets using CUDA.
 
 
 Primary Functions:
-F_g = (G * M_1 * M_2) / d^2
-F = m * a
-v__t = V_i * a * t
+- F_g = (G * M_1 * M_2) / d^2
+- F = m * a
+- v__t = V_i * a * t
 
 Gravitational constant:
 G = 6.67 x 10^-11
 
 Body Factors:
  - Mass [1 x 1]
- - Position [1 x 1]
+ - Position [1 x 3]
  - Velocity [1 x 3]
  - Radius [1 x 1]
 
@@ -29,4 +29,4 @@ __Notes:__
     - launch kernel w/ list of all other bodies
     - calculate each iteration in seperate thread
     - reduce all force vectors
-    - 
+    - apply force and determine acceleration, change in velocity, and change in position
