@@ -90,7 +90,10 @@ float3 get_accel_vector(struct body* origin, struct body* actor) {
 
 //calculate mean acceleration vector from all other bodies
 float3 CPU_reduce_accel_vectors(struct body* b, struct body** bodies, const int &num_bodies) {
-    float3 accel = {0.0f, 0.0f, 0.0f};    
+    float3 accel;
+    accel.x = 0;
+    accel.y = 0;
+    accel.z = 0;    
 
     for (int i = 0; i < num_bodies; i++) {
         if (bodies[i]->id != b->id) { //if not self
