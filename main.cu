@@ -58,20 +58,14 @@ int main (int argc, char *argv[]) {
     //printf("\nEntered number is: "%d", userChoice);
     
     if ("%d", userChoice == 1) {
+        //simulator test code
+        struct body* bodies[2];
+        const int len = 2;
+
+        bodies[0] = &b1;
+        bodies[1] = &b2;
         printf("You chose to calculate using the CPU\n");
-    }
-    if ("%d", userChoice == 2) {
-        printf("You chose to calculate using the GPU\n");
-    }    
-
-    //simulator test code
-    struct body* bodies[2];
-    const int len = 2;
-    
-    bodies[0] = &b1;
-    bodies[1] = &b2;
-
-    for(;;) {
+        for(;;) {
         CPU_tick(bodies, len, 0.01);
         printf("p:");
         print_float3(bodies[0]->position);
@@ -83,7 +77,11 @@ int main (int argc, char *argv[]) {
         print_float3(bodies[1]->velocity);
         printf("\r");
     }
-    printf("\n");
+
+    }
+    if ("%d", userChoice == 2) {
+        printf("You chose to calculate using the GPU\n");
+    }    
  
     printf("haha lmao\n");
 }
