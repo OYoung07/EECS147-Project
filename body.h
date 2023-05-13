@@ -17,6 +17,7 @@ float3 get_direction_vector(struct body* origin, struct body* actor);
 float3 get_accel_vector(struct body* origin, struct body* actor);
 float3 CPU_reduce_accel_vectors(struct body* b, struct body** bodies, const int &num_bodies);
 void CPU_tick(struct body** bodies, const int &num_bodies, const float &t);
+void print_bodies(struct body** bodies, const int &num_bodies, const float &tile_scale); 
 
 float3 operator+(const float3 &a, const float3 &b); 
 float3 operator-(const float3 &a, const float3 &b);

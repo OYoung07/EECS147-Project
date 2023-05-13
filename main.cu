@@ -71,8 +71,14 @@ int main (int argc, char *argv[]) {
     bodies[0] = &b1;
     bodies[1] = &b2;
 
+    unsigned long tick = 0;
     for(;;) {
-        CPU_tick(bodies, len, 0.01);
+        CPU_tick(bodies, len, 0.001);
+
+        if (tick % 1000 == 0) {
+            print_bodies(bodies, len, 1000e3);  
+        }
+        /*
         printf("p:");
         print_float3(bodies[0]->position);
         printf("v:");
@@ -82,6 +88,9 @@ int main (int argc, char *argv[]) {
         printf("v:");
         print_float3(bodies[1]->velocity);
         printf("\r");
+        */
+        
+        tick++;
     }
     printf("\n");
  

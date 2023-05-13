@@ -119,3 +119,32 @@ void CPU_tick(struct body** bodies, const int &num_bodies, const float &t) {
     }
 }
 
+void print_bodies(struct body** bodies, const int &num_bodies, const float &tile_scale) {
+    char map[40][40];
+    int y_index;
+    int x_index;    
+
+    for (int y = 0; y < 40; y++) {
+        for (int x = 0; x < 40; x++) {
+            map[y][x] = '.';
+        }     
+    }
+
+    for (int i = 0; i < num_bodies; i++) {
+        y_index = (int)(bodies[i]->position.y / tile_scale) + 20;
+        x_index = (int)(bodies[i]->position.x / tile_scale) + 20;
+        
+        if (y_index < 40 && y_index >= 0 && x_index < 40 && x_index >= 0) {
+            map[y_index][x_index] = '@';
+        }
+    }
+
+    printf("\e[1;1H\e[2J"); //clear screen
+    for (int y = 0; y < 40; y++) {
+        for (int x = 0; x < 40; x++) {
+            printf("%c",map[y][x]);
+        }
+        printf("\n");
+    }
+
+}
