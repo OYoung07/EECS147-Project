@@ -5,7 +5,7 @@
 #define TILE_SIZE 1
 
 
-__global__ void GPUCalculation(float *out, float *in, unsigned size) {
+__global__ void GPU_tick(float *out, float *in, unsigned size) {
 
     
 

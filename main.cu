@@ -58,41 +58,42 @@ int main (int argc, char *argv[]) {
     //printf("\nEntered number is: "%d", userChoice);
     
     if ("%d", userChoice == 1) {
+        //simulator test code
+        struct body* bodies[2];
+        const int len = 2;
+
+        bodies[0] = &b1;
+        bodies[1] = &b2;
         printf("You chose to calculate using the CPU\n");
+            
+        unsigned long tick = 0;
+        
+        for(;;) {
+            CPU_tick(bodies, len, 0.001);
+
+            if (tick % 10000 == 0) {
+                print_bodies(bodies, len, 1000e3);  
+            }
+
+            /*
+            printf("p:");
+            print_float3(bodies[0]->position);
+            printf("v:");
+            print_float3(bodies[0]->velocity);
+            printf(" p:");
+            print_float3(bodies[1]->position);
+            printf("v:");
+            print_float3(bodies[1]->velocity);
+            printf("\r");
+            */
+            
+            tick++;
+        }
+
     }
     if ("%d", userChoice == 2) {
         printf("You chose to calculate using the GPU\n");
     }    
-
-    //simulator test code
-    struct body* bodies[2];
-    const int len = 2;
-    
-    bodies[0] = &b1;
-    bodies[1] = &b2;
-
-    unsigned long tick = 0;
-    for(;;) {
-        CPU_tick(bodies, len, 0.001);
-
-        if (tick % 1000 == 0) {
-            print_bodies(bodies, len, 1000e3);  
-        }
-        /*
-        printf("p:");
-        print_float3(bodies[0]->position);
-        printf("v:");
-        print_float3(bodies[0]->velocity);
-        printf(" p:");
-        print_float3(bodies[1]->position);
-        printf("v:");
-        print_float3(bodies[1]->velocity);
-        printf("\r");
-        */
-        
-        tick++;
-    }
-    printf("\n");
  
     printf("haha lmao\n");
 }

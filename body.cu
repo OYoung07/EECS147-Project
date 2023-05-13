@@ -126,7 +126,7 @@ void print_bodies(struct body** bodies, const int &num_bodies, const float &tile
 
     for (int y = 0; y < 40; y++) {
         for (int x = 0; x < 40; x++) {
-            map[y][x] = '.';
+            map[y][x] = ' ';
         }     
     }
 
