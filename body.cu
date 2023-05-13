@@ -101,14 +101,14 @@ float3 CPU_reduce_accel_vectors(struct body* b, struct body** bodies, const int 
     return accel;
 }
 
-void tick(struct body** bodies, const int &num_bodies, const float &t) {
+void CPU_tick(struct body** bodies, const int &num_bodies, const float &t) {
     float3 a;    
 
     for (int i = 0; i < num_bodies; i++) {
         a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
         
         bodies[i]->velocity = bodies[i]->velocity + (a * (t/2.0)); //kick        
-        bodies[i]->position = bodies[i]->position + (bodies[i].velocity * t); //drift
+        bodies[i]->position = bodies[i]->position + (bodies[i]->velocity * t); //drift
        
         a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
 
