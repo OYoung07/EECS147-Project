@@ -88,7 +88,31 @@ float3 get_accel_vector(struct body* origin, struct body* actor) {
     return A_vec;
 }
 
-void tick(struct body* b, const float3 &a, const float &t) {
-          
+//calculate mean acceleration vector from all other bodies
+float3 CPU_reduce_accel_vectors(struct body* b, struct body** bodies, const int &num_bodies) {
+    float3 accel = {0.0f, 0.0f, 0.0f};    
+
+    for (int i = 0; i < num_bodies; i++) {
+        if (bodies[i]->id != b->id) { //if not self
+           accel = accel + get_accel_vector(b, bodies[i]); 
+        }
+    }
+
+    return accel;
+}
+
+void tick(struct body** bodies, const int &num_bodies, const float &t) {
+    float3 a;    
+
+    for (int i = 0; i < num_bodies; i++) {
+        a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
+        
+        bodies[i]->velocity = bodies[i]->velocity + (a * (t/2.0)); //kick        
+        bodies[i]->position = bodies[i]->position + (bodies[i].velocity * t); //drift
+       
+        a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
+
+        bodies[i]->velocity = bodies[i]->velocity + (a * (t/2.0)); //kick 
+    }
 }
 
