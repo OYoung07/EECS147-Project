@@ -13,10 +13,14 @@ struct body {
 float distance(struct body* b1, struct body* b2);
 float calculate_FG(struct body* b1, struct body* b2);
 float3 get_direction_vector(struct body* origin, struct body* actor);
-
+float3 get_accel_vector(struct body* origin, struct body* actor);
+void tick(struct body* b, const float3 &a, const float &t);
 
 float3 operator+(const float3 &a, const float3 &b); 
 float3 operator-(const float3 &a, const float3 &b);
 float3 operator*(const float3 &a, const float &b);
 float3 operator/(const float3 &a, const float &b);
+
+void print_float3(const float3 &f);
+
 #endif

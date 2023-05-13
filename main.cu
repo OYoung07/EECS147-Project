@@ -25,6 +25,12 @@ int main (int argc, char *argv[]) {
     float3 vec = get_direction_vector(&b1,&b2);
 
     printf("(%.5f,%.5f,%.5f)\n",vec.x,vec.y,vec.z);
+
+    float3 accel = get_accel_vector(&b1, &b2);
+
+    //printf("(%.20f,%.20f,%.20f)\n",accel.x,accel.y,accel.z);
+    print_float3(accel);
+    printf("\n");
  
     printf("haha lmao\n");
 }

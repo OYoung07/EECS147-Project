@@ -1,5 +1,6 @@
 #include "body.h"
 #include <math.h>
+#include <stdio.h>
 
 /* operator overloading for float3 */
 float3 operator+(const float3 &a, const float3 &b) {
@@ -42,6 +43,11 @@ float3 operator/(const float3 &a, const float &b) {
     return c;
 }
 
+void print_float3(const float3 &f) {
+    printf("(%e,%e,%e)", f.x, f.y, f.z);
+}
+
+
 //get distance between two bodies
 float distance(struct body* b1, struct body* b2) {
     return sqrt(pow(b2->position.x - b1->position.x, 2) + 
@@ -69,5 +75,20 @@ float3 get_direction_vector(struct body* origin, struct body* actor) {
     direction = direction / norm;
 
     return direction;
+}
+
+/* calculate acceleration of origin as exerted by actor */
+float3 get_accel_vector(struct body* origin, struct body* actor) {
+    float F = calculate_FG(origin, actor);
+    float3 dir = get_direction_vector(origin, actor);
+
+    float3 F_vec = dir * F; //get force vector
+    float3 A_vec = F_vec / origin->mass; //F = MA -> A = F/M
+
+    return A_vec;
+}
+
+void tick(struct body* b, const float3 &a, const float &t) {
+          
 }
 
