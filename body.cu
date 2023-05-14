@@ -124,25 +124,35 @@ void print_bodies(struct body** bodies, const int &num_bodies, const float &tile
     int y_index;
     int x_index;    
 
+    //draw true to size
     for (int y = 0; y < 40; y++) {
         for (int x = 0; x < 40; x++) {
             map[y][x] = ' ';
+            for (int i = 0; i < num_bodies; i++) {
+                if (sqrt(pow(bodies[i]->position.x - ((x-20) * tile_scale), 2) + pow(bodies[i]->position.y - ((y-20) * tile_scale), 2)) <= bodies[i]->radius) {
+                    map[y][x] = '@';
+                }  
+            }
         }     
     }
 
+    //draw as point mass if too small
     for (int i = 0; i < num_bodies; i++) {
         y_index = (int)(bodies[i]->position.y / tile_scale) + 20;
         x_index = (int)(bodies[i]->position.x / tile_scale) + 20;
         
         if (y_index < 40 && y_index >= 0 && x_index < 40 && x_index >= 0) {
-            map[y_index][x_index] = '@';
+            if (map[y_index][x_index] != '@') {
+                map[y_index][x_index] = '.';
+            }
         }
     }
 
+    //print
     printf("\e[1;1H\e[2J"); //clear screen
     for (int y = 0; y < 40; y++) {
         for (int x = 0; x < 40; x++) {
-            printf("%c",map[y][x]);
+            printf(" %c",map[y][x]);
         }
         printf("\n");
     }

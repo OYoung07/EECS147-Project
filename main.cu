@@ -10,6 +10,7 @@ int main (int argc, char *argv[]) {
     struct body b1;
     b1.id = 1;
     b1.mass = 5.97e24; //earth mass
+    b1.radius = 6378e3;
     b1.position.x = 0;
     b1.position.y = 0;
     b1.position.z = 0;
@@ -20,11 +21,12 @@ int main (int argc, char *argv[]) {
     struct body b2;
     b2.id = 2;
     b2.mass = 300;
-    b2.position.x = 6378e3 + 420e3; //LEO
+    b2.radius = 10;
+    b2.position.x = 6378e3 + 37000e3; //GEO
     b2.position.y = 0;
     b2.position.z = 0;
     b2.velocity.x = 0;
-    b2.velocity.y = 7.8e3; //LEO
+    b2.velocity.y = 3e3; //GEO
     b2.velocity.z = 0;
    
     // Allocate and initlize host memory
@@ -69,13 +71,23 @@ int main (int argc, char *argv[]) {
         unsigned long tick = 0;
         
         for(;;) {
-            CPU_tick(bodies, len, 0.001);
+            CPU_tick(bodies, len, 0.01);
 
-            if (tick % 10000 == 0) {
-                print_bodies(bodies, len, 1000e3);  
+            if (tick % 100000 == 0) {
+                print_bodies(bodies, len, 4000e3);  
+             
+                printf("p:");
+                print_float3(bodies[0]->position);
+                printf("v:");
+                print_float3(bodies[0]->velocity);
+                printf(" p:");
+                print_float3(bodies[1]->position);
+                printf("v:");
+                print_float3(bodies[1]->velocity);
+                printf("\n");
             }
 
-            /*
+            /* 
             printf("p:");
             print_float3(bodies[0]->position);
             printf("v:");
@@ -84,7 +96,7 @@ int main (int argc, char *argv[]) {
             print_float3(bodies[1]->position);
             printf("v:");
             print_float3(bodies[1]->velocity);
-            printf("\r");
+            printf("\n");
             */
             
             tick++;
