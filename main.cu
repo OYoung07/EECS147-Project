@@ -4,6 +4,18 @@
 #include "support.h"
 #include "body.h"
 
+int filePrompt() {
+    int fileChoice;
+    printf("What files would you like to simulate?\n");
+    scanf("%d", fileChoice);
+}
+
+int timePrompt() {
+    int timeChoice;
+    printf("How long would you like to simulate this?\n");
+    scanf("%d", timeChoice);
+}
+
 int main (int argc, char *argv[]) {
     int userChoice;
    
@@ -60,6 +72,8 @@ int main (int argc, char *argv[]) {
     //printf("\nEntered number is: "%d", userChoice);
     
     if ("%d", userChoice == 1) {
+        filePrompt();
+        timePrompt();
         //simulator test code
         struct body* bodies[2];
         const int len = 2;
@@ -105,6 +119,8 @@ int main (int argc, char *argv[]) {
     }
     if ("%d", userChoice == 2) {
         printf("You chose to calculate using the GPU\n");
+        filePrompt();
+        timePrompt();
     }    
  
     printf("haha lmao\n");
