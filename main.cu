@@ -6,8 +6,32 @@
 
 int filePrompt() {
     int fileChoice;
-    printf("What files would you like to simulate?\n");
-    scanf("%d", fileChoice);
+    printf("Press 1 for solar system simulation or 2 for user-generated simulation: ");
+    scanf("%d", &fileChoice);
+
+    if (fileChoice == 1) { 
+        FILE* ptr; 
+        char ch;
+        ptr = fopen("bodydata.csv", "r");
+    
+        if (!ptr) {
+            printf("File can't be opened \n");
+        }
+
+        printf("The files of this content contain: \n");
+
+        while (!feof(ptr)) {
+            ch = fgetc(ptr);
+            printf("%c", ch);
+        }
+        fclose(ptr);
+       // printf("yippee\n");
+    }
+    
+    if (fileChoice == 2) {
+        printf("yikers\n");
+    }
+      
 }
 
 int timePrompt() {
