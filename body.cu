@@ -2,6 +2,8 @@
 #include <math.h>
 #include <stdio.h>
 
+#define BLOCK_SIZE 16
+
 /* operator overloading for float3 */
 float3 operator+(const float3 &a, const float3 &b) {
     float3 c;
