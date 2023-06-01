@@ -103,7 +103,6 @@ __global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body b, struc
     if (index < num_bodies) {
         if (b.id != bodies[index].id) {    
             body_accel = GPU_get_accel_vector(&b, &bodies[index]);
-            //body_accel.x = b.mass;
             float3_atomicAdd(accel_out, body_accel);
         }
     }

@@ -101,43 +101,43 @@ float3 get_accel_vector(struct body* origin, struct body* actor) {
 }
 
 //calculate mean acceleration vector from all other bodies
-float3 CPU_reduce_accel_vectors(struct body* b, struct body** bodies, const int &num_bodies) {
+float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &num_bodies) {
     float3 accel;
     accel.x = 0;
     accel.y = 0;
     accel.z = 0;    
 
-
-    //debug
+    /* //debug
     for (int i = 0; i < num_bodies; i++) {
-        print_body(bodies[i]);
+        print_body(&bodies[i]);
     }
+    */
 
     for (int i = 0; i < num_bodies; i++) {
-        if (bodies[i]->id != b->id) { //if not self
-           accel = accel + get_accel_vector(b, bodies[i]); 
+        if (bodies[i].id != b.id) { //if not self
+           accel = accel + get_accel_vector(&b, &bodies[i]); 
         }
     }
 
     return accel;
 }
 
-void CPU_tick(struct body** bodies, const int &num_bodies, const float &t) {
+void CPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
     float3 a;    
 
     for (int i = 0; i < num_bodies; i++) {
         a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
         
-        bodies[i]->velocity = bodies[i]->velocity + (a * (t/2.0)); //kick        
-        bodies[i]->position = bodies[i]->position + (bodies[i]->velocity * t); //drift
+        bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick        
+        bodies[i].position = bodies[i].position + (bodies[i].velocity * t); //drift
        
         a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
 
-        bodies[i]->velocity = bodies[i]->velocity + (a * (t/2.0)); //kick 
+        bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick 
     }
 }
 
-void print_bodies(struct body** bodies, const int &num_bodies, const float &tile_scale) {
+void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_scale) {
     char map[40][40];
     int y_index;
     int x_index;    
@@ -147,7 +147,7 @@ void print_bodies(struct body** bodies, const int &num_bodies, const float &tile
         for (int x = 0; x < 40; x++) {
             map[y][x] = ' ';
             for (int i = 0; i < num_bodies; i++) {
-                if (sqrt(pow(bodies[i]->position.x - ((x-20) * tile_scale), 2) + pow(bodies[i]->position.y - ((y-20) * tile_scale), 2)) <= bodies[i]->radius) {
+                if (sqrt(pow(bodies[i].position.x - ((x-20) * tile_scale), 2) + pow(bodies[i].position.y - ((y-20) * tile_scale), 2)) <= bodies[i].radius) {
                     map[y][x] = '@';
                 }  
             }
@@ -156,8 +156,8 @@ void print_bodies(struct body** bodies, const int &num_bodies, const float &tile
 
     //draw as point mass if too small
     for (int i = 0; i < num_bodies; i++) {
-        y_index = (int)(bodies[i]->position.y / tile_scale) + 20;
-        x_index = (int)(bodies[i]->position.x / tile_scale) + 20;
+        y_index = (int)(bodies[i].position.y / tile_scale) + 20;
+        x_index = (int)(bodies[i].position.x / tile_scale) + 20;
         
         if (y_index < 40 && y_index >= 0 && x_index < 40 && x_index >= 0) {
             if (map[y_index][x_index] != '@') {
