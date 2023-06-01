@@ -84,17 +84,14 @@ int main (int argc, char *argv[]) {
     printf("\nGPU: ");
     print_float3(GPU_calculate_acceleration(bodies[0], bodies, 2));
     printf("\n"); 
-    
+   
+    printf("Press 1 for CPU calculations or 2 for GPU calculations: ");
+    scanf("%d", &userChoice);
+ 
     if ("%d", userChoice == 1) {
         filePrompt();
         timePrompt();
-        //simulator test code
-        /*
-        struct body* bodies[2];
-
-        bodies[0] = &bodies[0];
-        bodies[1] = &bodies[1];
-        */
+        
         const int len = 2;
         
         printf("You chose to calculate using the CPU\n");
@@ -102,44 +99,57 @@ int main (int argc, char *argv[]) {
         unsigned long tick = 0;
         
         for(;;) {
-            /*
             CPU_tick(bodies, len, 0.01);
 
-            if (tick % 100000 == 0) {
+            if (tick % 10000 == 0) {
                 print_bodies(bodies, len, 4000e3);  
              
                 printf("p:");
-                print_float3(bodies[0]->position);
+                print_float3(bodies[0].position);
                 printf("v:");
-                print_float3(bodies[0]->velocity);
+                print_float3(bodies[0].velocity);
                 printf(" p:");
-                print_float3(bodies[1]->position);
+                print_float3(bodies[1].position);
                 printf("v:");
-                print_float3(bodies[1]->velocity);
+                print_float3(bodies[1].velocity);
                 printf("\n");
             }
-            */
-
-            /* 
-            printf("p:");
-            print_float3(bodies[0]->position);
-            printf("v:");
-            print_float3(bodies[0]->velocity);
-            printf(" p:");
-            print_float3(bodies[1]->position);
-            printf("v:");
-            print_float3(bodies[1]->velocity);
-            printf("\n");
-            */
-            
+          
             tick++;
         }
 
     }
     if ("%d", userChoice == 2) {
         printf("You chose to calculate using the GPU\n");
+        
         filePrompt();
         timePrompt();
+        
+        const int len = 2;
+        
+        printf("You chose to calculate using the CPU\n");
+            
+        unsigned long tick = 0;
+        
+        for(;;) {
+            GPU_tick(bodies, len, 1);
+
+            if (tick % 100 == 0) {
+                print_bodies(bodies, len, 4000e3);  
+             
+                printf("p:");
+                print_float3(bodies[0].position);
+                printf("v:");
+                print_float3(bodies[0].velocity);
+                printf(" p:");
+                print_float3(bodies[1].position);
+                printf("v:");
+                print_float3(bodies[1].velocity);
+                printf("\n");
+            }
+          
+            tick++;
+        }
     }    
  
     printf("haha lmao\n");

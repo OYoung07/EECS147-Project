@@ -2,47 +2,6 @@
 #include "body.h"
 
 #define BLOCK_SIZE 16
-
-__device__ inline float3 operator+(const float3 &a, const float3 &b) {
-    float3 c;
-
-    c.x = a.x + b.x; 
-    c.y = a.y + b.y; 
-    c.z = a.z + b.z;
-
-    return c;
-}
-
-__device__ inline float3 operator-(const float3 &a, const float3 &b) {
-    float3 c;
-
-    c.x = a.x - b.x;
-    c.y = a.y - b.y;
-    c.z = a.z - b.z;
-
-    return c;
-}
-
-__device__ inline float3 operator*(const float3 &a, const float &b) {
-    float3 c;
-
-    c.x = a.x * b;
-    c.y = a.y * b;
-    c.z = a.z * b;
-
-    return c;
-}
-
-__device__ inline float3 operator/(const float3 &a, const float &b) {
-    float3 c;
-    
-    c.x = a.x / b;
-    c.y = a.y / b;
-    c.z = a.z / b;
-
-    return c;
-}
-
 __device__ void float3_atomicAdd(float3* f, float3 addend) {
     atomicAdd(&(f->x), addend.x);
     atomicAdd(&(f->y), addend.y);
@@ -158,6 +117,23 @@ float3 GPU_calculate_acceleration(struct body b, struct body* CPU_bodies, const 
 
     return CPU_accel;
 }
+
+void GPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
+    float3 a;    
+
+    for (int i = 0; i < num_bodies; i++) {
+        a = GPU_calculate_acceleration(bodies[i], bodies, num_bodies);
+        
+        bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick        
+        bodies[i].position = bodies[i].position + (bodies[i].velocity * t); //drift
+       
+        a = GPU_calculate_acceleration(bodies[i], bodies, num_bodies);
+
+        bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick 
+    }
+}
+
+
 
 //need to allocate GPU memory for bodies and accel_out
 /*

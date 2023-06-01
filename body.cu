@@ -5,7 +5,7 @@
 #define BLOCK_SIZE 16
 
 /* operator overloading for float3 */
-float3 operator+(const float3 &a, const float3 &b) {
+__device__ __host__  float3 operator+(const float3 &a, const float3 &b) {
     float3 c;
 
     c.x = a.x + b.x; 
@@ -15,7 +15,7 @@ float3 operator+(const float3 &a, const float3 &b) {
     return c;
 }
 
-float3 operator-(const float3 &a, const float3 &b) {
+__device__  __host__ float3 operator-(const float3 &a, const float3 &b) {
     float3 c;
 
     c.x = a.x - b.x;
@@ -25,7 +25,7 @@ float3 operator-(const float3 &a, const float3 &b) {
     return c;
 }
 
-float3 operator*(const float3 &a, const float &b) {
+__device__  __host__ float3 operator*(const float3 &a, const float &b) {
     float3 c;
 
     c.x = a.x * b;
@@ -35,7 +35,7 @@ float3 operator*(const float3 &a, const float &b) {
     return c;
 }
 
-float3 operator/(const float3 &a, const float &b) {
+__device__  __host__ float3 operator/(const float3 &a, const float &b) {
     float3 c;
     
     c.x = a.x / b;
@@ -174,5 +174,4 @@ void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_
         }
         printf("\n");
     }
-
 }
