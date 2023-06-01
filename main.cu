@@ -79,12 +79,12 @@ int main (int argc, char *argv[]) {
     bodies[1]->velocity.x = 0;
     bodies[1]->velocity.y = 3e3; //GEO
     bodies[1]->velocity.z = 0;
-  
+ 
     //verify GPU implementation
     printf("CPU: ");
     print_float3(CPU_reduce_accel_vectors(bodies[0], bodies, 2));
     printf("\nGPU: ");
-    print_float3(GPU_calculate_acceleration(bodies[0], bodies, 2));
+    print_float3(GPU_calculate_acceleration(*bodies[0],*bodies, 2));
     printf("\n"); 
 
     // Allocate and initlize host memory
@@ -134,6 +134,7 @@ int main (int argc, char *argv[]) {
         unsigned long tick = 0;
         
         for(;;) {
+            /*
             CPU_tick(bodies, len, 0.01);
 
             if (tick % 100000 == 0) {
@@ -149,6 +150,7 @@ int main (int argc, char *argv[]) {
                 print_float3(bodies[1]->velocity);
                 printf("\n");
             }
+            */
 
             /* 
             printf("p:");

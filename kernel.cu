@@ -43,6 +43,11 @@ __device__ inline float3 operator/(const float3 &a, const float &b) {
     return c;
 }
 
+__device__ void float3_atomicAdd(float3* f, float3 addend) {
+    atomicAdd(&(f->x), addend.x);
+    atomicAdd(&(f->y), addend.y);
+    atomicAdd(&(f->z), addend.z);
+}
 
 //get distance between two bodies
 __device__ float GPU_distance(struct body* b1, struct body* b2) {
@@ -87,62 +92,69 @@ __device__ float3 GPU_get_accel_vector(struct body* origin, struct body* actor) 
 
 
 //GPU kernel
-__global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body* b, struct body** bodies, const unsigned int num_bodies) {
-    __shared__ float3 partialSum[2 * BLOCK_SIZE];
+__global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body b, struct body* bodies, const unsigned int num_bodies) {
+    float3 body_accel;
 
     unsigned int tx = threadIdx.x;
-    unsigned int start = 2 * blockIdx.x * blockDim.x;
+    unsigned int bx = blockIdx.x;
 
-    if (bodies[tx]->id == b->id) {
-        return; //exit if current body is self
-    }
+    unsigned int index = tx + (bx * BLOCK_SIZE);
 
-    partialSum[tx] = GPU_get_accel_vector(b, bodies[start + tx]);
-    partialSum[blockDim.x + tx] = GPU_get_accel_vector(b, bodies[start + blockDim.x + tx]);
-
-    for (unsigned int stride = blockDim.x; stride > 0; stride /= 2) {
-        __syncthreads();
-
-        if (tx < stride) {
-            partialSum[tx] = partialSum[tx] +  partialSum[tx + stride];
+    if (index < num_bodies) {
+        if (b.id != bodies[index].id) {    
+            //body_accel = GPU_get_accel_vector(&b, &bodies[index]);
+            body_accel.x = 1;
+            float3_atomicAdd(accel_out, body_accel);
         }
     }
 
-    if (tx == 0) {
-        atomicAdd(&accel_out->x, partialSum[0].x); //add back to output without race condition
-        atomicAdd(&accel_out->y, partialSum[0].y);
-        atomicAdd(&accel_out->z, partialSum[0].z);
-    }
+    __syncthreads();
 }
 
-float3 GPU_calculate_acceleration(struct body* CPU_b, struct body** CPU_bodies, const unsigned int num_bodies) {
+float3 GPU_calculate_acceleration(struct body CPU_b, struct body* CPU_bodies, const unsigned int num_bodies) {
+    cudaError_t cuda_ret;
     float3 CPU_accel;
     float3* GPU_accel;
-    struct body* GPU_b;
-    struct body** GPU_bodies;
+    struct body GPU_b;
+    struct body* GPU_bodies;
 
-    dim3 DimBlock(BLOCK_SIZE);
-    dim3 DimGrid(ceil(num_bodies/(BLOCK_SIZE * 2)));
+    dim3 DimBlock(BLOCK_SIZE, 1, 1);
+    dim3 DimGrid(ceil((float)num_bodies/((float)BLOCK_SIZE)), 1, 1);
 
     cudaMalloc((void**) &GPU_accel, sizeof(float3));
     cudaMalloc((void**) &GPU_b, sizeof(struct body)); //will be written to
     cudaMalloc((void**) &GPU_bodies, sizeof(struct body) * num_bodies); //will be read-only
-    
+ 
+    cudaDeviceSynchronize();   
+ 
     CPU_accel.x = 0;
     CPU_accel.y = 0;
     CPU_accel.z = 0;
     
-    cudaMemcpy(&GPU_accel, &CPU_accel, sizeof(float3), cudaMemcpyHostToDevice);
-    cudaMemcpy(GPU_b, CPU_b, sizeof(struct body), cudaMemcpyHostToDevice);
+    cudaMemcpy(GPU_accel, &CPU_accel, sizeof(float3), cudaMemcpyHostToDevice);
+    cudaMemcpy(&GPU_b, &CPU_b, sizeof(struct body), cudaMemcpyHostToDevice);
     cudaMemcpy(GPU_bodies, CPU_bodies, sizeof(struct body) * num_bodies, cudaMemcpyHostToDevice);
+
+    cudaDeviceSynchronize();
 
     GPU_reduce_accel_vectors<<<DimGrid,DimBlock>>>(GPU_accel, GPU_b, GPU_bodies, num_bodies);
 
+    cuda_ret = cudaDeviceSynchronize();
+    if (cuda_ret != cudaSuccess) {
+        printf("CUDA error: %s\n", cudaGetErrorString(cuda_ret));
+        printf("Oppsie woopsie I did a fucky wucky (GPU kernel failed, lmao)\n");
+    }
+
     cudaMemcpy(&CPU_accel, GPU_accel, sizeof(float3), cudaMemcpyDeviceToHost);
-    cudaFree(GPU_accel);
-    cudaFree(GPU_b);
-    cudaFree(GPU_bodies);
     
+    cudaDeviceSynchronize();   
+
+    cudaFree(GPU_accel);
+    cudaFree(&GPU_b);
+    cudaFree(&GPU_bodies);
+    
+    cudaDeviceSynchronize();   
+
     return CPU_accel;
 }
 
