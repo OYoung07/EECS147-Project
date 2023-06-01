@@ -6,19 +6,56 @@
 
 int filePrompt() {
     int fileChoice;
-    printf("What files would you like to simulate?\n");
-    scanf("%d", fileChoice);
+    int numBodies[256];
+    struct body bi[256];
+    srand(time(NULL));
+    int r = rand() % 10;
+
+    printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
+    scanf("%d", &fileChoice);
+
+    if (fileChoice == 1) { 
+        FILE* ptr; 
+        char ch;
+        ptr = fopen("bodydata.csv", "r");
+    
+        if (!ptr) {
+            printf("File can't be opened\n");
+        }
+
+        printf("The files of this content contain:\n");
+
+        while (!feof(ptr)) {
+            ch = fgetc(ptr);
+            printf("%c", ch);
+        }
+        fclose(ptr);
+       // printf("yippee\n");
+    }
+    
+    if (fileChoice == 2) {
+        for (int i = 0; i < r; i++) {
+            numBodies[i] = i;
+            //printf("%d", numBodies[i]);
+            bi[i].id = i;
+            printf("%d", bi[i].id);   
+        }
+        
+       // printf("yikers\n");
+    }
+      
 }
 
 int timePrompt() {
     int timeChoice;
-    printf("How long would you like to simulate this?\n");
-    scanf("%d", timeChoice);
+    printf("Press 1 for the number of ticks or 2 seconds per tick: ");
+    scanf("%d", &timeChoice);
 }
 
 int main (int argc, char *argv[]) {
-    int userChoice;
-   
+    int userChoice; 
+    Timer timer; 
+
     struct body b1;
     b1.id = 1;
     b1.mass = 5.97e24; //earth mass
