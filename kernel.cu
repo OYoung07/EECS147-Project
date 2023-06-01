@@ -86,15 +86,8 @@ __device__ float3 GPU_get_accel_vector(struct body* origin, struct body* actor) 
 }
 
 
-
 //GPU kernel
-//TODO: need to redefine body functions as host functions
-__global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body* b, struct body** bodies, const unsigned  int num_bodies) {
-    float3 accel;
-    accel.x = 0;
-    accel.y = 0;
-    accel.z = 0;    
- 
+__global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body* b, struct body** bodies, const unsigned int num_bodies) {
     __shared__ float3 partialSum[2 * BLOCK_SIZE];
 
     unsigned int tx = threadIdx.x;
@@ -122,14 +115,14 @@ __global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body* b, stru
     }
 }
 
-float3 GPU_calculate_acceleration(struct body** CPU_bodies, struct body* CPU_b, const unsigned int num_bodies) {
+float3 GPU_calculate_acceleration(struct body* CPU_b, struct body** CPU_bodies, const unsigned int num_bodies) {
     float3 CPU_accel;
     float3* GPU_accel;
     struct body* GPU_b;
     struct body** GPU_bodies;
 
     dim3 DimBlock(BLOCK_SIZE);
-    dim3 DimGrid(num_bodies/(BLOCK_SIZE * 2));
+    dim3 DimGrid(ceil(num_bodies/(BLOCK_SIZE * 2)));
 
     cudaMalloc((void**) &GPU_accel, sizeof(float3));
     cudaMalloc((void**) &GPU_b, sizeof(struct body)); //will be written to

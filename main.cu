@@ -56,28 +56,37 @@ int main (int argc, char *argv[]) {
     int userChoice; 
     Timer timer; 
 
-    struct body b1;
-    b1.id = 1;
-    b1.mass = 5.97e24; //earth mass
-    b1.radius = 6378e3;
-    b1.position.x = 0;
-    b1.position.y = 0;
-    b1.position.z = 0;
-    b1.velocity.x = 0;
-    b1.velocity.y = 0;
-    b1.velocity.z = 0;
-    
-    struct body b2;
-    b2.id = 2;
-    b2.mass = 300;
-    b2.radius = 10;
-    b2.position.x = 6378e3 + 37000e3; //GEO
-    b2.position.y = 0;
-    b2.position.z = 0;
-    b2.velocity.x = 0;
-    b2.velocity.y = 3e3; //GEO
-    b2.velocity.z = 0;
-   
+    struct body* bodies[2];
+
+    bodies[0] = (struct body*) malloc(sizeof(struct body));
+    bodies[0]->id = 1;
+    bodies[0]->mass = 5.97e24; //earth mass
+    bodies[0]->radius = 6378e3;
+    bodies[0]->position.x = 0;
+    bodies[0]->position.y = 0;
+    bodies[0]->position.z = 0;
+    bodies[0]->velocity.x = 0;
+    bodies[0]->velocity.y = 0;
+    bodies[0]->velocity.z = 0;
+
+    bodies[1] = (struct body*) malloc(sizeof(struct body));  
+    bodies[1]->id = 2;
+    bodies[1]->mass = 300;
+    bodies[1]->radius = 10;
+    bodies[1]->position.x = 6378e3 + 37000e3; //GEO
+    bodies[1]->position.y = 0;
+    bodies[1]->position.z = 0;
+    bodies[1]->velocity.x = 0;
+    bodies[1]->velocity.y = 3e3; //GEO
+    bodies[1]->velocity.z = 0;
+  
+    //verify GPU implementation
+    printf("CPU: ");
+    print_float3(CPU_reduce_accel_vectors(bodies[0], bodies, 2));
+    printf("\nGPU: ");
+    print_float3(GPU_calculate_acceleration(bodies[0], bodies, 2));
+    printf("\n"); 
+
     // Allocate and initlize host memory
     float *in_h, *out_h;
     float *in_d, *out_d;
@@ -112,11 +121,14 @@ int main (int argc, char *argv[]) {
         filePrompt();
         timePrompt();
         //simulator test code
+        /*
         struct body* bodies[2];
-        const int len = 2;
 
-        bodies[0] = &b1;
-        bodies[1] = &b2;
+        bodies[0] = &bodies[0];
+        bodies[1] = &bodies[1];
+        */
+        const int len = 2;
+        
         printf("You chose to calculate using the CPU\n");
             
         unsigned long tick = 0;
