@@ -49,6 +49,16 @@ void print_float3(const float3 &f) {
     printf("(%e,%e,%e)", f.x, f.y, f.z);
 }
 
+void print_body(struct body* b) {
+    printf("Body ID:%d\n",b->id);
+    printf("Mass:%e\n",b->mass);
+    printf("Radius:%e\n",b->radius);
+    printf("Position:");
+    print_float3(b->position);
+    printf("\nVelocity:");
+    print_float3(b->velocity);
+    printf("\n");
+}
 
 //get distance between two bodies
 float distance(struct body* b1, struct body* b2) {
@@ -96,6 +106,12 @@ float3 CPU_reduce_accel_vectors(struct body* b, struct body** bodies, const int 
     accel.x = 0;
     accel.y = 0;
     accel.z = 0;    
+
+
+    //debug
+    for (int i = 0; i < num_bodies; i++) {
+        print_body(bodies[i]);
+    }
 
     for (int i = 0; i < num_bodies; i++) {
         if (bodies[i]->id != b->id) { //if not self
