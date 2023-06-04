@@ -38,7 +38,7 @@ int filePrompt() {
             numBodies[i] = i;
             //printf("%d", numBodies[i]);
             bi[i].id = i;
-            printf("%d", bi[i].id);   
+            //printf("%d", bi[i].id);   
         }
         
        // printf("yikers\n");
