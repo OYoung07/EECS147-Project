@@ -35,15 +35,59 @@ int filePrompt() {
     
     if (fileChoice == 2) {
         for (int i = 0; i < r; i++) {
+
+            //int test;
+            //test = rand() % 10;
+            //printf("%d", test);
+            //printf(" \n");
+
+            //int testTwo;
+            //testTwo = rand() % 10;
+            //printf("%d", testTwo);
+            //printf(" \n");
+        
             numBodies[i] = i;
+            //printf("The following numBodies are: ");
             //printf("%d", numBodies[i]);
+            //printf(" \n");
+
             bi[i].id = i;
-            //printf("%d", bi[i].id);   
+            //printf("The following body ids are: ");
+            //printf("%d", bi[i].id);
+            //printf(" \n");            
+
+            bi[i].mass = rand() % 10;
+            //printf("The following body masses are: %d\n", bi[i].mass);
+            
+            bi[i].radius = rand() % 10;
+            //printf("The following body radii are: %d\n", bi[i].radius);
+
+            bi[i].position.x = rand() % 10;
+            //printf("The following body x positions are: %d\n", bi[i].position.x);
+
+            bi[i].position.y = rand() % 10;
+            //printf("The following body y positions are: %d\n", bi[i].position.y);
+
+            bi[i].position.z = rand() % 10;
+            //printf("The following body z positions are: %d\n", bi[i].position.z);
+
+            bi[i].velocity.x = rand() % 10;
+            //printf("The following body x velocities are: %d\n", bi[i].velocity.x);
+
+            bi[i].velocity.y = rand() % 10;
+            //printf("The following body y velocities are: %d\n", bi[i].velocity.y);
+
+            bi[i].velocity.z = rand() % 10;
+            //printf("The following body z velocities are: %d\n", bi[i].velocity.z);
         }
         
        // printf("yikers\n");
     }
-      
+
+    else if (fileChoice != 1 || fileChoice != 2) {
+        printf("Invalid option\n");
+        exit(-1);
+    }  
 }
 
 int timePrompt() {
@@ -150,6 +194,11 @@ int main (int argc, char *argv[]) {
           
             tick++;
         }
+    }    
+    
+    else {
+        printf("Invalid option\n");
+        exit(-1);
     }    
  
     printf("haha lmao\n");
