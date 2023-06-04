@@ -3,9 +3,9 @@
 
 NVCC        = nvcc
 ifeq (,$(shell which nvprof))
-NVCC_FLAGS  = -O3
+NVCC_FLAGS  = -O3 -rdc=true
 else
-NVCC_FLAGS  = -O3 --std=c++03
+NVCC_FLAGS  = -O3 --std=c++03 -rdc=true
 endif
 LD_FLAGS    = -lcudart
 EXE         = simulator

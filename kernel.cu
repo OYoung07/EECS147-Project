@@ -2,47 +2,6 @@
 #include "body.h"
 
 #define BLOCK_SIZE 16
-
-__device__ inline float3 operator+(const float3 &a, const float3 &b) {
-    float3 c;
-
-    c.x = a.x + b.x; 
-    c.y = a.y + b.y; 
-    c.z = a.z + b.z;
-
-    return c;
-}
-
-__device__ inline float3 operator-(const float3 &a, const float3 &b) {
-    float3 c;
-
-    c.x = a.x - b.x;
-    c.y = a.y - b.y;
-    c.z = a.z - b.z;
-
-    return c;
-}
-
-__device__ inline float3 operator*(const float3 &a, const float &b) {
-    float3 c;
-
-    c.x = a.x * b;
-    c.y = a.y * b;
-    c.z = a.z * b;
-
-    return c;
-}
-
-__device__ inline float3 operator/(const float3 &a, const float &b) {
-    float3 c;
-    
-    c.x = a.x / b;
-    c.y = a.y / b;
-    c.z = a.z / b;
-
-    return c;
-}
-
 __device__ void float3_atomicAdd(float3* f, float3 addend) {
     atomicAdd(&(f->x), addend.x);
     atomicAdd(&(f->y), addend.y);
@@ -102,8 +61,7 @@ __global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body b, struc
 
     if (index < num_bodies) {
         if (b.id != bodies[index].id) {    
-            //body_accel = GPU_get_accel_vector(&b, &bodies[index]);
-            body_accel.x = 1;
+            body_accel = GPU_get_accel_vector(&b, &bodies[index]);
             float3_atomicAdd(accel_out, body_accel);
         }
     }
@@ -111,18 +69,22 @@ __global__ void GPU_reduce_accel_vectors(float3* accel_out, struct body b, struc
     __syncthreads();
 }
 
-float3 GPU_calculate_acceleration(struct body CPU_b, struct body* CPU_bodies, const unsigned int num_bodies) {
+float3 GPU_calculate_acceleration(struct body b, struct body* CPU_bodies, const unsigned int num_bodies) {
     cudaError_t cuda_ret;
     float3 CPU_accel;
     float3* GPU_accel;
-    struct body GPU_b;
     struct body* GPU_bodies;
 
     dim3 DimBlock(BLOCK_SIZE, 1, 1);
     dim3 DimGrid(ceil((float)num_bodies/((float)BLOCK_SIZE)), 1, 1);
 
+    /* //debug
+    for (int i = 0; i < num_bodies; i++) {
+        print_body(&CPU_bodies[i]);
+    }
+    */
+
     cudaMalloc((void**) &GPU_accel, sizeof(float3));
-    cudaMalloc((void**) &GPU_b, sizeof(struct body)); //will be written to
     cudaMalloc((void**) &GPU_bodies, sizeof(struct body) * num_bodies); //will be read-only
  
     cudaDeviceSynchronize();   
@@ -132,12 +94,11 @@ float3 GPU_calculate_acceleration(struct body CPU_b, struct body* CPU_bodies, co
     CPU_accel.z = 0;
     
     cudaMemcpy(GPU_accel, &CPU_accel, sizeof(float3), cudaMemcpyHostToDevice);
-    cudaMemcpy(&GPU_b, &CPU_b, sizeof(struct body), cudaMemcpyHostToDevice);
     cudaMemcpy(GPU_bodies, CPU_bodies, sizeof(struct body) * num_bodies, cudaMemcpyHostToDevice);
 
     cudaDeviceSynchronize();
 
-    GPU_reduce_accel_vectors<<<DimGrid,DimBlock>>>(GPU_accel, GPU_b, GPU_bodies, num_bodies);
+    GPU_reduce_accel_vectors<<<DimGrid,DimBlock>>>(GPU_accel, b, GPU_bodies, num_bodies);
 
     cuda_ret = cudaDeviceSynchronize();
     if (cuda_ret != cudaSuccess) {
@@ -146,17 +107,33 @@ float3 GPU_calculate_acceleration(struct body CPU_b, struct body* CPU_bodies, co
     }
 
     cudaMemcpy(&CPU_accel, GPU_accel, sizeof(float3), cudaMemcpyDeviceToHost);
-    
-    cudaDeviceSynchronize();   
+ 
+    cudaDeviceSynchronize();
 
     cudaFree(GPU_accel);
-    cudaFree(&GPU_b);
-    cudaFree(&GPU_bodies);
+    cudaFree(GPU_bodies);
     
     cudaDeviceSynchronize();   
 
     return CPU_accel;
 }
+
+void GPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
+    float3 a;    
+
+    for (int i = 0; i < num_bodies; i++) {
+        a = GPU_calculate_acceleration(bodies[i], bodies, num_bodies);
+        
+        bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick        
+        bodies[i].position = bodies[i].position + (bodies[i].velocity * t); //drift
+       
+        a = GPU_calculate_acceleration(bodies[i], bodies, num_bodies);
+
+        bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick 
+    }
+}
+
+
 
 //need to allocate GPU memory for bodies and accel_out
 /*
