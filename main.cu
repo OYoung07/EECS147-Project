@@ -170,8 +170,6 @@ int main (int argc, char *argv[]) {
         timePrompt();
         
         const int len = 2;
-        
-        printf("You chose to calculate using the CPU\n");
             
         unsigned long tick = 0;
         
