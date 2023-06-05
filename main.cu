@@ -82,11 +82,6 @@ int filePrompt() {
         }
         
        // printf("yikers\n");
-    }
-
-    else if (fileChoice != 1 || fileChoice != 2) {
-        printf("Invalid option\n");
-        exit(-1);
     }  
 }
 
@@ -193,11 +188,5 @@ int main (int argc, char *argv[]) {
             tick++;
         }
     }    
-    
-    else {
-        printf("Invalid option\n");
-        exit(-1);
-    }    
- 
     printf("haha lmao\n");
 }
