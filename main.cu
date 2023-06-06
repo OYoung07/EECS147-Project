@@ -56,28 +56,28 @@ int filePrompt() {
             //printf("%d", bi[i].id);
             //printf(" \n");            
 
-            bi[i].mass = rand() % 10;
-            //printf("The following body masses are: %d\n", bi[i].mass);
+            bi[i].mass = rand() % 10000000;
+            printf("The following body masses are: %d\n", bi[i].mass);
             
-            bi[i].radius = rand() % 10;
+            bi[i].radius = rand() % 10000000;
             //printf("The following body radii are: %d\n", bi[i].radius);
 
-            bi[i].position.x = rand() % 10;
+            bi[i].position.x = rand() % 3000;
             //printf("The following body x positions are: %d\n", bi[i].position.x);
 
-            bi[i].position.y = rand() % 10;
+            bi[i].position.y = rand() % 3000;
             //printf("The following body y positions are: %d\n", bi[i].position.y);
 
-            bi[i].position.z = rand() % 10;
+            bi[i].position.z = rand() % 3000;
             //printf("The following body z positions are: %d\n", bi[i].position.z);
 
-            bi[i].velocity.x = rand() % 10;
+            bi[i].velocity.x = rand() % 50000;
             //printf("The following body x velocities are: %d\n", bi[i].velocity.x);
 
-            bi[i].velocity.y = rand() % 10;
+            bi[i].velocity.y = rand() % 50000;
             //printf("The following body y velocities are: %d\n", bi[i].velocity.y);
 
-            bi[i].velocity.z = rand() % 10;
+            bi[i].velocity.z = rand() % 50000;
             //printf("The following body z velocities are: %d\n", bi[i].velocity.z);
         }
         

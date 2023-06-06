@@ -1,6 +1,9 @@
 # EECS147-Project
 Simulation of planets using CUDA. 
 
+Link to Project Report: https://docs.google.com/document/d/1hG70vn_KdoyivD15H0c3MkClLEw0a0TxA4wD672M6Sw/edit
+
+Link to Youtube Presentation: 
 
 Primary Functions:
 - F_g = (G * M_1 * M_2) / d^2
