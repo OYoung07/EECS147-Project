@@ -113,6 +113,7 @@ int main (int argc, char *argv[]) {
 
         if (tick % ticks_per_display == 0) {
             print_bodies(bi, len, DISTANCE_SCALE/40);
+            //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
         }
 
         tick++;

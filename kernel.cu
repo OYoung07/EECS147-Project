@@ -169,8 +169,6 @@ __global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigne
         
         output_bodies[index].velocity = output_bodies[index].velocity + (a * (t/2.0)); //kick 
     }
-
-    __syncthreads();
 }
 
 void GPU_tick_improved(struct body* CPU_bodies, const unsigned int &num_bodies, const float &t) {
