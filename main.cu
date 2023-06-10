@@ -132,12 +132,23 @@ int main (int argc, char *argv[]) {
         timePrompt();
         
         const int len = 2;
-        
+        unsigned long timeLimit;
+
         printf("You chose to calculate using the CPU\n");
-            
-        unsigned long tick = 0;
         
-        for(;;) {
+        printf("Enter desired simulation runtime or 0 for Default\n");
+        scanf("%d", &userChoice);
+
+        if("%d", userChoice == 0) {
+            timeLimit = 20000000;
+        }
+        else {
+            timeLimit  = userChoice;
+        }
+           
+        unsigned long tick = 0;
+
+        while (tick <= timeLimit) {
             CPU_tick(bodies, len, 0.01);
 
             if (tick % 10000 == 0) {
@@ -165,10 +176,21 @@ int main (int argc, char *argv[]) {
         timePrompt();
         
         const int len = 2;
-            
+        unsigned long timeLimit;
+        
+        printf("Enter desired simulation runtime or 0 for Default");
+        scanf("%d", userChoice);
+
+        if ("%d", userChoice == 0) {
+            timeLimit = 20000000;
+        }
+        else {
+            timeLimit = userChoice;
+        } 
+
         unsigned long tick = 0;
         
-        for(;;) {
+        while(tick <= timeLimit) {
             GPU_tick(bodies, len, 1);
 
             if (tick % 100 == 0) {
