@@ -7,8 +7,10 @@
 #define DISTANCE_SCALE 30000000
 
 struct body bi[256];
+struct body solarSystem[10];
 int randomizedChoice = 0;
-int r = 100;
+int numBodies;
+
 
 int filePrompt() {
     int fileChoice;
@@ -39,11 +41,13 @@ int filePrompt() {
         int seedNum;
         randomizedChoice = 1;
 
-        printf("Please enter a seed number: ");
+        printf("Enter a seed number: ");
         scanf("%d", &seedNum);
         srand(seedNum);
+        printf("Enter the number of bodies you want to simulate: ");
+        scanf("%d", &numBodies);
     
-        for (int i = 0; i < r; i++) {
+        for (int i = 0; i < numBodies; i++) {
 
             //int test;
             //test = rand() % 10;
@@ -104,7 +108,7 @@ int main (int argc, char *argv[]) {
     filePrompt();
     timePrompt();
  
-    const int len = r;
+    const int len = numBodies;
 
     unsigned long long tick = 0;
     float secs_per_tick = 0.1;

@@ -16,6 +16,7 @@ void verify(float* input, unsigned num_elements, float result);
 void startTime(Timer* timer);
 void stopTime(Timer* timer);
 float elapsedTime(Timer timer);
+unsigned long timerPrompt();
 #ifdef __cplusplus
 }
 #endif
