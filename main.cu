@@ -28,20 +28,32 @@ int filePrompt() {
 
         char line[MAX_LINE_LENGTH];
         fgets(line, MAX_LINE_LENGTH, file);
+        fgets(line, MAX_LINE_LENGTH, file);
 
         int i = 0;
+        float temp_mass;
+        float temp_radius;
+        float3 temp_position;
+        float3 temp_velocity;
+
         while(fgets(line, MAX_LINE_LENGTH, file) != NULL && i < 10) {
-            scanf(line, "%d %lf %lf %lf %lf %lf %lf %lf %lf", 
-                &solarSystem[i].id,
-                &solarSystem[i].mass,
-                &solarSystem[i].radius,
-                &solarSystem[i].position.x,
-                &solarSystem[i].position.y,
-                &solarSystem[i].position.z,
-                &solarSystem[i].velocity.x,
-                &solarSystem[i].velocity.y,
-                &solarSystem[i].velocity.z);
-            i++;
+           sscanf(line, "%f,%f,%f,%f,%f,%f,%f,%f",
+                &temp_mass,
+                &temp_radius,
+                &temp_position.x,
+                &temp_position.y,
+                &temp_position.z,
+                &temp_velocity.x,
+                &temp_velocity.y,
+                &temp_velocity.z);
+
+                solarSystem[i].id = i;
+                solarSystem[i].mass = temp_mass;
+                solarSystem[i].radius = temp_radius;
+                solarSystem[i].position = temp_position;
+                solarSystem[i].velocity = temp_velocity;
+
+                i++;
         }
         fclose(file);
 
