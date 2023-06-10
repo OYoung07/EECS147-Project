@@ -5,8 +5,8 @@
 #include "body.h"
 
 #define DISTANCE_SCALE 30000000
-int numBodies[256];
 struct body bi[256];
+int randomizedChoice = 0;
 int r = 100;
 
 int filePrompt() {
@@ -36,6 +36,8 @@ int filePrompt() {
     }
     
     if (fileChoice == 2) {
+        randomizedChoice = 1;
+    
         for (int i = 0; i < r; i++) {
 
             //int test;
@@ -46,11 +48,6 @@ int filePrompt() {
             //int testTwo;
             //testTwo = rand() % 10;
             //printf("%d", testTwo);
-            //printf(" \n");
-        
-            numBodies[i] = i;
-            //printf("The following numBodies are: ");
-            //printf("%d", numBodies[i]);
             //printf(" \n");
 
             bi[i].id = i;
@@ -134,6 +131,9 @@ int main (int argc, char *argv[]) {
         timePrompt();
 
         unsigned long timeLimit;
+        
+        if (randomizedChoice == 1) {
+
         const int len = r;
 
         printf("You chose to calculate using the CPU\n");
@@ -168,7 +168,7 @@ int main (int argc, char *argv[]) {
           
             tick++;
         }
-
+      }
     }
     if ("%d", userChoice == 2) {
         printf("You chose to calculate using the GPU\n");
