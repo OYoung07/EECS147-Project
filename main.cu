@@ -12,7 +12,6 @@ int r = 100;
 
 int filePrompt() {
     int fileChoice;
-    srand(time(NULL));
 
     printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
@@ -37,7 +36,12 @@ int filePrompt() {
     }
     
     if (fileChoice == 2) {
+        int seedNum;
         randomizedChoice = 1;
+
+        printf("Please enter a seed number: ");
+        scanf("%d", &seedNum);
+        srand(seedNum);
     
         for (int i = 0; i < r; i++) {
 
@@ -71,13 +75,13 @@ int filePrompt() {
             bi[i].position.z = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body z positions are: %d\n", bi[i].position.z);
 
-            bi[i].velocity.x = rand() % 10000;
+            bi[i].velocity.x = rand() % 10000 - (10000 / 2);
             //printf("The following body x velocities are: %d\n", bi[i].velocity.x);
 
-            bi[i].velocity.y = rand() % 10000;
+            bi[i].velocity.y = rand() % 10000 - (10000 / 2);
             //printf("The following body y velocities are: %d\n", bi[i].velocity.y);
 
-            bi[i].velocity.z = rand() % 10000;
+            bi[i].velocity.z = rand() % 10000 - (10000 / 2);
             //printf("The following body z velocities are: %d\n", bi[i].velocity.z);
         }
         
@@ -95,98 +99,33 @@ int main (int argc, char *argv[]) {
     int userChoice; 
     Timer timer; 
 
-    struct body* bodies = (struct body*) malloc(sizeof(struct body*) * 2);
-
-    bodies[0].id = 0;
-    bodies[0].mass = 5.97e24; //earth mass
-    bodies[0].radius = 6378e3;
-    bodies[0].position.x = 0;
-    bodies[0].position.y = 0;
-    bodies[0].position.z = 0;
-    bodies[0].velocity.x = 0;
-    bodies[0].velocity.y = 0;
-    bodies[0].velocity.z = 0;
-
-    bodies[1].id = 1;
-    bodies[1].mass = 300;
-    bodies[1].radius = 10;
-    bodies[1].position.x = 6378e3 + 37000e3; //GEO
-    bodies[1].position.y = 0;
-    bodies[1].position.z = 0;
-    bodies[1].velocity.x = 0;
-    bodies[1].velocity.y = 3e3; //GEO
-    bodies[1].velocity.z = 0;
-    
-    //verify GPU implementation
-    printf("CPU: ");
-    print_float3(CPU_reduce_accel_vectors(bodies[0], bodies, 2));
-    printf("\nGPU: ");
-    print_float3(GPU_calculate_acceleration(bodies[0], bodies, 2));
-    printf("\n"); 
-   
     printf("Press 1 for CPU calculations or 2 for GPU calculations: ");
     scanf("%d", &userChoice);
     filePrompt();
     timePrompt();
  
-    if ("%d", userChoice == 1) {
-        if (randomizedChoice == 1) {
+    const int len = r;
 
-            const int len = r;
-            unsigned long tick = 0;
-           
-            for (;;) {
-                 CPU_tick(bi, len, 1);
-                 if (tick % 100 == 0) {
+    unsigned long long tick = 0;
+    float secs_per_tick = 0.1;
+    unsigned int ticks_per_display = 1000;
 
-                 print_bodies(bi, len, DISTANCE_SCALE/40);
-                 printf("p:");
-                 print_float3(bi[0].position);
-                 printf("v:");
-                 print_float3(bi[0].velocity);
-                 printf(" p:");
-                 print_float3(bi[1].position);
-                 printf("v:");
-                 print_float3(bi[1].velocity);
-                 printf("\n");
-                }
-          
-                tick++;
-            }
-        }     
-        if (randomizedChoice == 0) {
-            printf("HAHAHAH");
+    unsigned long long max_ticks = 10000; 
+
+    /* main while loop */
+    while (tick < max_ticks) {
+        if ("%d", userChoice == 1) {
+            CPU_tick(bi, len, secs_per_tick);
+        } else if ("%d", userChoice == 2) {
+            GPU_tick_improved(bi, len, secs_per_tick); 
+        }    
+
+        if (tick % ticks_per_display == 0) {
+            print_bodies(bi, len, DISTANCE_SCALE/40);
         }
 
- }
-    if ("%d", userChoice == 2) {
-        const int len = 2;
+        tick++;
+    }
 
-        unsigned long tick = 0;
-        
-        for(;;) {
-            GPU_tick_improved(bi, r, 1);
-
-            if (tick % 100 == 0) {
-                print_bodies(bi, r, DISTANCE_SCALE/40);  
-                
-                /*
-                printf("m:%e ", bodies[0].mass);
-                printf("p:");
-                print_float3(bodies[0].position);
-                printf("v:");
-                print_float3(bodies[0].velocity);
-                printf("m:%e ", bodies[1].mass); 
-                printf(" p:");
-                print_float3(bodies[1].position);
-                printf("v:");
-                print_float3(bodies[1].velocity);
-                printf("\n");
-                */
-            }
-          
-            tick++;
-        }
-    }    
     printf("haha lmao\n");
 }
