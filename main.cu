@@ -169,15 +169,17 @@ int main (int argc, char *argv[]) {
         unsigned long tick = 0;
         
         for(;;) {
-            GPU_tick(bodies, len, 1);
+            GPU_tick_improved(bodies, len, 1);
 
             if (tick % 100 == 0) {
                 print_bodies(bodies, len, 4000e3);  
-             
+            
+                printf("m:%e ", bodies[0].mass); 
                 printf("p:");
                 print_float3(bodies[0].position);
                 printf("v:");
                 print_float3(bodies[0].velocity);
+                printf("m:%e ", bodies[1].mass); 
                 printf(" p:");
                 print_float3(bodies[1].position);
                 printf("v:");

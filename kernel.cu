@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "body.h"
 
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 256
+#define SHARED_MEM_SIZE 256
+
 __device__ void float3_atomicAdd(float3* f, float3 addend) {
     atomicAdd(&(f->x), addend.x);
     atomicAdd(&(f->y), addend.y);
@@ -127,3 +129,74 @@ void GPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
     }
 }
 
+//better GPU kernel
+__global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigned int num_bodies, const float t) {
+    __shared__ struct body temp_bodies_shared[SHARED_MEM_SIZE]; 
+
+    unsigned int tx = threadIdx.x;
+    unsigned int bx = blockIdx.x;
+
+    unsigned int index = tx + (bx * BLOCK_SIZE);
+
+    float3 a;
+
+    if (index < num_bodies) { //populate shared memory
+       temp_bodies_shared[index] = output_bodies[index]; 
+    }
+
+    __syncthreads();
+
+    //do calculations 
+    if (index < num_bodies) {
+        //get first acceleration
+        a.x = 0; a.y = 0; a.z = 0;
+        for (int i = 0; i < num_bodies; i++) { 
+            if (output_bodies[index].id != temp_bodies_shared[i].id) {    
+                a = a + GPU_get_accel_vector(&output_bodies[index], &temp_bodies_shared[i]);
+            }
+        }
+        
+        output_bodies[index].velocity = output_bodies[index].velocity + (a * (t/2.0)); //kick        
+        output_bodies[index].position = output_bodies[index].position + (output_bodies[index].velocity * t); //drift
+                  
+        //get second acceleration
+        a.x = 0; a.y = 0; a.z = 0;
+        for (int i = 0; i < num_bodies; i++) { 
+            if (output_bodies[index].id != temp_bodies_shared[i].id) {    
+                a = a + GPU_get_accel_vector(&output_bodies[index], &temp_bodies_shared[i]);
+            }
+        }
+        
+        output_bodies[index].velocity = output_bodies[index].velocity + (a * (t/2.0)); //kick 
+    }
+
+    __syncthreads();
+}
+
+void GPU_tick_improved(struct body* CPU_bodies, const unsigned int &num_bodies, const float &t) {
+    cudaError_t cuda_ret;
+    struct body* GPU_bodies;
+
+    dim3 DimBlock(BLOCK_SIZE, 1, 1);
+    dim3 DimGrid(ceil((float)num_bodies/((float)BLOCK_SIZE)), 1, 1);
+
+    cudaMalloc((void**) &GPU_bodies, sizeof(struct body) * num_bodies); 
+    cudaDeviceSynchronize();   
+ 
+    cudaMemcpy(GPU_bodies, CPU_bodies, sizeof(struct body) * num_bodies, cudaMemcpyHostToDevice);
+    cudaDeviceSynchronize();
+
+    GPU_tick_shared_memory<<<DimGrid,DimBlock>>>(GPU_bodies, num_bodies, t);
+
+    cuda_ret = cudaDeviceSynchronize();
+    if (cuda_ret != cudaSuccess) {
+        printf("CUDA error: %s\n", cudaGetErrorString(cuda_ret));
+        printf("Oppsie woopsie I did a fucky wucky (GPU kernel failed, lmao)\n");
+    }
+
+    cudaMemcpy(CPU_bodies, GPU_bodies, sizeof(struct body) * num_bodies, cudaMemcpyDeviceToHost);
+    cudaDeviceSynchronize();
+
+    cudaFree(GPU_bodies);
+    cudaDeviceSynchronize();
+}
