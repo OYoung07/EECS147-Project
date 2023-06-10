@@ -78,12 +78,6 @@ float3 GPU_calculate_acceleration(struct body b, struct body* CPU_bodies, const 
     dim3 DimBlock(BLOCK_SIZE, 1, 1);
     dim3 DimGrid(ceil((float)num_bodies/((float)BLOCK_SIZE)), 1, 1);
 
-    /* //debug
-    for (int i = 0; i < num_bodies; i++) {
-        print_body(&CPU_bodies[i]);
-    }
-    */
-
     cudaMalloc((void**) &GPU_accel, sizeof(float3));
     cudaMalloc((void**) &GPU_bodies, sizeof(struct body) * num_bodies); //will be read-only
  
@@ -133,45 +127,3 @@ void GPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
     }
 }
 
-
-
-//need to allocate GPU memory for bodies and accel_out
-/*
-void GPU_tick(struct body* CPU_bodies, const int &num_bodies) {
-    float3 CPU_a; //acceleration scalar
-    float3 GPU_a;
-    struct body* GPU_bodies; //deivce memory for computation
-    struct body* GPU_body_outputs; //array to write to
-
-    cudaMalloc((void**) &GPU_bodies, sizeof(struct body) * num_bodies); //read-only
-    cudaMalloc((void**) &GPU_body_outputs, sizeof(struct body) * num_bodies); //write to
-
-    cudaMemcpy(GPU_bodies, CPU_bodies, sizeof(struct body) * num_bodies, cudaMemcpyHostToDevice);
-    cudaMemcpy(GPU_body_outputs, CPU_bodies, sizeof(struct body) * num_bodiesi, cudaMemcpyHostToDevice);
-
-    for (int i = 0; i < num_bodies, i++) {
-        //copy to GPU and run acceleration calculations
-        CPU_a = 0;
-        cudaMemcpy(GPU_a, CPU_a, sizeof(float3), cudaMemcpyHostToDevice);    
-
-        GPU_reduce_accel_vectors(GPU_a, GPU_body_outputs[i], GPU_bodies, num_bodies);
-
-        cudaMemcpy(CPU_a, GPU_a, sizeof(float3), cudaMemcpyHostToDevice);
- 
-        GPU_bo       
-    }
-
-    //just for porting, delete this late:
-    for (int i = 0; i < num_bodies; i++) {
-        a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
-        
-        bodies[i]->velocity = bodies[i]->velocity + (a * (t/2.0)); //kick        
-        bodies[i]->position = bodies[i]->position + (bodies[i]->velocity * t); //drift
-       
-        a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
-
-        bodies[i]->velocity = bodies[i]->velocity + (a * (t/2.0)); //kick 
-    }
-    cudaMemcpy(GPU_bodies, bodies, sizeof(struct body) * num_bodies);
-}
-*/

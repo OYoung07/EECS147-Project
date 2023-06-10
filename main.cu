@@ -87,7 +87,7 @@ int filePrompt() {
 
 int timePrompt() {
     int timeChoice;
-    printf("Press 1 for the number of ticks or 2 seconds per tick: ");
+    printf("Enter 1 for one second/tick OR Enter 2 for two seconds/tick: ");
     scanf("%d", &timeChoice);
 }
 
@@ -124,7 +124,7 @@ int main (int argc, char *argv[]) {
     print_float3(GPU_calculate_acceleration(bodies[0], bodies, 2));
     printf("\n"); 
    
-    printf("Press 1 for CPU calculations or 2 for GPU calculations: ");
+    printf("Enter 1 for CPU calculations or 2 for GPU calculations: ");
     scanf("%d", &userChoice);
  
     if ("%d", userChoice == 1) {
