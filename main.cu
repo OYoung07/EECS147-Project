@@ -57,7 +57,7 @@ int filePrompt() {
             //printf(" \n");            
 
             bi[i].mass = rand() % 10000000;
-            printf("The following body masses are: %d\n", bi[i].mass);
+            //printf("The following body masses are: %d\n", bi[i].mass);
             
             bi[i].radius = rand() % 10000000;
             //printf("The following body radii are: %d\n", bi[i].radius);
@@ -142,7 +142,7 @@ int main (int argc, char *argv[]) {
 
             if (tick % 10000 == 0) {
                 print_bodies(bodies, len, 4000e3);  
-             
+ 
                 printf("p:");
                 print_float3(bodies[0].position);
                 printf("v:");
