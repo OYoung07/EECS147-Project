@@ -4,6 +4,7 @@
 #include "support.h"
 #include "body.h"
 
+
 #define DISTANCE_SCALE 30000000
 struct body bi[256];
 int randomizedChoice = 0;
@@ -27,7 +28,7 @@ int filePrompt() {
 
         printf("The files of this content contain:\n");
 
-        for (!feof(ptr)) {
+        while (!feof(ptr)) {
             ch = fgetc(ptr);
             printf("%c", ch);
         }
@@ -129,57 +130,36 @@ int main (int argc, char *argv[]) {
     if ("%d", userChoice == 1) {
         filePrompt();
         timePrompt();
-
-        unsigned long timeLimit;
         
         if (randomizedChoice == 1) {
 
             const int len = r;
             unsigned long tick = 0;
-        
-            for(;;) {
-                CPU_tick(bi, len, 0.001);
-        const int len = r;
-
-        printf("You chose to calculate using the CPU\n");
-        printf("Enter desired simulation runtime or 0 for Default\n");
-        scanf("%d", &userChoice);
-
-        if("%d", userChoice == 0) {
-            timeLimit = 20000000;
-        }
-        else {
-            timeLimit  = userChoice;
-        }
            
-        unsigned long tick = 0;
+            for (;;) {
+                 CPU_tick(bodies, len, 0.01);
+                 if (tick % 10000 == 0) {
 
-        while (tick <= timeLimit) {
-            CPU_tick(bodies, len, 0.01);
-            if (tick % 10000 == 0) {
-
-            print_bodies(bi, len, DISTANCE_SCALE/40);  
- 
-            printf("p:");
-            print_float3(bi[0].position);
-            printf("v:");
-            print_float3(bi[0].velocity);
-            printf(" p:");
-            print_float3(bi[1].position);
-            printf("v:");
-            print_float3(bi[1].velocity);
-            printf("\n");
-        }
+                 print_bodies(bi, len, DISTANCE_SCALE/40);
+                 printf("p:");
+                 print_float3(bi[0].position);
+                 printf("v:");
+                 print_float3(bi[0].velocity);
+                 printf(" p:");
+                 print_float3(bi[1].position);
+                 printf("v:");
+                 print_float3(bi[1].velocity);
+                 printf("\n");
+            }
           
-        tick++;
+            tick++;
         }
     }
-
         if (randomizedChoice == 0) {
             printf("HAHAHAH");
         }
 
-    }
+ }
     if ("%d", userChoice == 2) {
         printf("You chose to calculate using the GPU\n");
         
@@ -187,26 +167,15 @@ int main (int argc, char *argv[]) {
         timePrompt();
         
         const int len = 2;
-        unsigned long timeLimit;
-        
-        printf("Enter desired simulation runtime or 0 for Default");
-        scanf("%d", userChoice);
-
-        if ("%d", userChoice == 0) {
-            timeLimit = 20000000;
-        }
-        else {
-            timeLimit = userChoice;
-        } 
 
         unsigned long tick = 0;
         
-        while(tick <= timeLimit) {
+        for(;;) {
             GPU_tick(bodies, len, 1);
 
             if (tick % 100 == 0) {
-                print_bodies(bodies, len, 4000e3);  
-             
+
+                print_bodies(bodies, len, DISTANCE_SCALE/40);  
                 printf("p:");
                 print_float3(bodies[0].position);
                 printf("v:");
