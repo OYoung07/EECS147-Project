@@ -4,12 +4,15 @@
 #include "support.h"
 #include "body.h"
 
+#define DISTANCE_SCALE 30000000
+
+struct body bi[256];
+int randomizedChoice = 0;
+int r = 100;
+
 int filePrompt() {
     int fileChoice;
-    int numBodies[256];
-    struct body bi[256];
     srand(time(NULL));
-    int r = rand() % 10;
 
     printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
@@ -34,6 +37,8 @@ int filePrompt() {
     }
     
     if (fileChoice == 2) {
+        randomizedChoice = 1;
+    
         for (int i = 0; i < r; i++) {
 
             //int test;
@@ -45,39 +50,34 @@ int filePrompt() {
             //testTwo = rand() % 10;
             //printf("%d", testTwo);
             //printf(" \n");
-        
-            numBodies[i] = i;
-            //printf("The following numBodies are: ");
-            //printf("%d", numBodies[i]);
-            //printf(" \n");
 
             bi[i].id = i;
             //printf("The following body ids are: ");
             //printf("%d", bi[i].id);
             //printf(" \n");            
 
-            bi[i].mass = rand() % 10000000;
-            printf("The following body masses are: %d\n", bi[i].mass);
+            bi[i].mass = (rand() % 1000) * (10e20);
+            //printf("The following body masses are: %d\n", bi[i].mass);
             
-            bi[i].radius = rand() % 10000000;
+            bi[i].radius = rand() % 1000;
             //printf("The following body radii are: %d\n", bi[i].radius);
 
-            bi[i].position.x = rand() % 3000;
+            bi[i].position.x = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body x positions are: %d\n", bi[i].position.x);
 
-            bi[i].position.y = rand() % 3000;
+            bi[i].position.y = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body y positions are: %d\n", bi[i].position.y);
 
-            bi[i].position.z = rand() % 3000;
+            bi[i].position.z = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body z positions are: %d\n", bi[i].position.z);
 
-            bi[i].velocity.x = rand() % 50000;
+            bi[i].velocity.x = rand() % 10000;
             //printf("The following body x velocities are: %d\n", bi[i].velocity.x);
 
-            bi[i].velocity.y = rand() % 50000;
+            bi[i].velocity.y = rand() % 10000;
             //printf("The following body y velocities are: %d\n", bi[i].velocity.y);
 
-            bi[i].velocity.z = rand() % 50000;
+            bi[i].velocity.z = rand() % 10000;
             //printf("The following body z velocities are: %d\n", bi[i].velocity.z);
         }
         
@@ -87,7 +87,7 @@ int filePrompt() {
 
 int timePrompt() {
     int timeChoice;
-    printf("Enter 1 for one second/tick OR Enter 2 for two seconds/tick: ");
+    printf("Press 1 for the number of ticks or 2 seconds per tick: ");
     scanf("%d", &timeChoice);
 }
 
@@ -124,40 +124,42 @@ int main (int argc, char *argv[]) {
     print_float3(GPU_calculate_acceleration(bodies[0], bodies, 2));
     printf("\n"); 
    
-    printf("Enter 1 for CPU calculations or 2 for GPU calculations: ");
+    printf("Press 1 for CPU calculations or 2 for GPU calculations: ");
     scanf("%d", &userChoice);
  
     if ("%d", userChoice == 1) {
         filePrompt();
         timePrompt();
         
-        const int len = 2;
-        
-        printf("You chose to calculate using the CPU\n");
-            
-        unsigned long tick = 0;
-        
-        for(;;) {
-            CPU_tick(bodies, len, 0.01);
+        if (randomizedChoice == 1) {
 
-            if (tick % 10000 == 0) {
-                print_bodies(bodies, len, 4000e3);  
-             
-                printf("p:");
-                print_float3(bodies[0].position);
-                printf("v:");
-                print_float3(bodies[0].velocity);
-                printf(" p:");
-                print_float3(bodies[1].position);
-                printf("v:");
-                print_float3(bodies[1].velocity);
-                printf("\n");
+            const int len = r;
+            unsigned long tick = 0;
+           
+            for (;;) {
+                 CPU_tick(bodies, len, 0.01);
+                 if (tick % 10000 == 0) {
+
+                 print_bodies(bi, len, DISTANCE_SCALE/40);
+                 printf("p:");
+                 print_float3(bi[0].position);
+                 printf("v:");
+                 print_float3(bi[0].velocity);
+                 printf(" p:");
+                 print_float3(bi[1].position);
+                 printf("v:");
+                 print_float3(bi[1].velocity);
+                 printf("\n");
             }
           
             tick++;
         }
-
     }
+        if (randomizedChoice == 0) {
+            printf("HAHAHAH");
+        }
+
+ }
     if ("%d", userChoice == 2) {
         printf("You chose to calculate using the GPU\n");
         
@@ -165,16 +167,15 @@ int main (int argc, char *argv[]) {
         timePrompt();
         
         const int len = 2;
-            
+
         unsigned long tick = 0;
         
         for(;;) {
             GPU_tick_improved(bodies, len, 1);
 
             if (tick % 100 == 0) {
-                print_bodies(bodies, len, 4000e3);  
-            
-                printf("m:%e ", bodies[0].mass); 
+                print_bodies(bodies, len, DISTANCE_SCALE/40);  
+                printf("m:%e ", bodies[0].mass);
                 printf("p:");
                 print_float3(bodies[0].position);
                 printf("v:");
