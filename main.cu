@@ -11,29 +11,23 @@ struct body solarSystem[10];
 int randomizedChoice = 0;
 int numBodies;
 
-
 int filePrompt() {
     int fileChoice;
 
     printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
 
-    if (fileChoice == 1) { 
-        FILE* ptr; 
-        char ch;
-        ptr = fopen("bodydata.csv", "r");
-    
-        if (!ptr) {
-            printf("File can't be opened\n");
+    if (fileChoice == 1) {  
+        char symbol;
+        unsigned char symbol2;  
+        FILE *FileIn;
+        FileIn = fopen("bodydata.csv", "rt");
+        while ((symbol=getc(FileIn))!=EOF) {
+            symbol2 = (unsigned char) symbol;
+            if (symbol2 >= '0' && symbol2 <= '9') {
+                printf("%c", symbol);
+            }
         }
-
-        printf("The files of this content contain:\n");
-
-        while (!feof(ptr)) {
-            ch = fgetc(ptr);
-            printf("%c", ch);
-        }
-        fclose(ptr);
        // printf("yippee\n");
     }
     
