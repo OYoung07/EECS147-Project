@@ -137,7 +137,7 @@ int main (int argc, char *argv[]) {
             unsigned long tick = 0;
            
             for (;;) {
-                 CPU_tick(bodies, len, 0.01);
+                 CPU_tick(bi, len, 0.01);
                  if (tick % 10000 == 0) {
 
                  print_bodies(bi, len, DISTANCE_SCALE/40);
@@ -161,8 +161,7 @@ int main (int argc, char *argv[]) {
 
  }
     if ("%d", userChoice == 2) {
-        printf("You chose to calculate using the GPU\n");
-        
+        printf("You chose to calculate using the GPU\n"); 
         filePrompt();
         timePrompt();
         
