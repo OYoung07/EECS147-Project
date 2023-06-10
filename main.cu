@@ -126,11 +126,10 @@ int main (int argc, char *argv[]) {
    
     printf("Press 1 for CPU calculations or 2 for GPU calculations: ");
     scanf("%d", &userChoice);
+    filePrompt();
+    timePrompt();
  
     if ("%d", userChoice == 1) {
-        filePrompt();
-        timePrompt();
-        
         if (randomizedChoice == 1) {
 
             const int len = r;
@@ -161,10 +160,6 @@ int main (int argc, char *argv[]) {
 
  }
     if ("%d", userChoice == 2) {
-        printf("You chose to calculate using the GPU\n"); 
-        filePrompt();
-        timePrompt();
-        
         const int len = 2;
 
         unsigned long tick = 0;
