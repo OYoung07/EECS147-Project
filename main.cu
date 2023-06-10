@@ -137,8 +137,8 @@ int main (int argc, char *argv[]) {
             unsigned long tick = 0;
            
             for (;;) {
-                 CPU_tick(bodies, len, 0.01);
-                 if (tick % 10000 == 0) {
+                 CPU_tick(bi, len, 1);
+                 if (tick % 100 == 0) {
 
                  print_bodies(bi, len, DISTANCE_SCALE/40);
                  printf("p:");
@@ -150,11 +150,11 @@ int main (int argc, char *argv[]) {
                  printf("v:");
                  print_float3(bi[1].velocity);
                  printf("\n");
-            }
+                }
           
-            tick++;
-        }
-    }
+                tick++;
+            }
+        }     
         if (randomizedChoice == 0) {
             printf("HAHAHAH");
         }
@@ -171,10 +171,12 @@ int main (int argc, char *argv[]) {
         unsigned long tick = 0;
         
         for(;;) {
-            GPU_tick_improved(bodies, len, 1);
+            GPU_tick_improved(bi, r, 1);
 
             if (tick % 100 == 0) {
-                print_bodies(bodies, len, DISTANCE_SCALE/40);  
+                print_bodies(bi, r, DISTANCE_SCALE/40);  
+                
+                /*
                 printf("m:%e ", bodies[0].mass);
                 printf("p:");
                 print_float3(bodies[0].position);
@@ -186,6 +188,7 @@ int main (int argc, char *argv[]) {
                 printf("v:");
                 print_float3(bodies[1].velocity);
                 printf("\n");
+                */
             }
           
             tick++;
