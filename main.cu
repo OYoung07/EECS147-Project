@@ -4,12 +4,14 @@
 #include "support.h"
 #include "body.h"
 
+#define DISTANCE_SCALE 30000000
+int numBodies[256];
+struct body bi[256];
+int r = 100;
+
 int filePrompt() {
     int fileChoice;
-    int numBodies[256];
-    struct body bi[256];
     srand(time(NULL));
-    int r = rand() % 10;
 
     printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
@@ -56,28 +58,28 @@ int filePrompt() {
             //printf("%d", bi[i].id);
             //printf(" \n");            
 
-            bi[i].mass = rand() % 10000000;
-            printf("The following body masses are: %d\n", bi[i].mass);
+            bi[i].mass = (rand() % 1000) * (10e20);
+            //printf("The following body masses are: %d\n", bi[i].mass);
             
-            bi[i].radius = rand() % 10000000;
+            bi[i].radius = rand() % 1000;
             //printf("The following body radii are: %d\n", bi[i].radius);
 
-            bi[i].position.x = rand() % 3000;
+            bi[i].position.x = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body x positions are: %d\n", bi[i].position.x);
 
-            bi[i].position.y = rand() % 3000;
+            bi[i].position.y = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body y positions are: %d\n", bi[i].position.y);
 
-            bi[i].position.z = rand() % 3000;
+            bi[i].position.z = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body z positions are: %d\n", bi[i].position.z);
 
-            bi[i].velocity.x = rand() % 50000;
+            bi[i].velocity.x = rand() % 10000;
             //printf("The following body x velocities are: %d\n", bi[i].velocity.x);
 
-            bi[i].velocity.y = rand() % 50000;
+            bi[i].velocity.y = rand() % 10000;
             //printf("The following body y velocities are: %d\n", bi[i].velocity.y);
 
-            bi[i].velocity.z = rand() % 50000;
+            bi[i].velocity.z = rand() % 10000;
             //printf("The following body z velocities are: %d\n", bi[i].velocity.z);
         }
         
@@ -87,7 +89,7 @@ int filePrompt() {
 
 int timePrompt() {
     int timeChoice;
-    printf("Enter 1 for one second/tick OR Enter 2 for two seconds/tick: ");
+    printf("Press 1 for the number of ticks or 2 seconds per tick: ");
     scanf("%d", &timeChoice);
 }
 
@@ -124,18 +126,17 @@ int main (int argc, char *argv[]) {
     print_float3(GPU_calculate_acceleration(bodies[0], bodies, 2));
     printf("\n"); 
    
-    printf("Enter 1 for CPU calculations or 2 for GPU calculations: ");
+    printf("Press 1 for CPU calculations or 2 for GPU calculations: ");
     scanf("%d", &userChoice);
  
     if ("%d", userChoice == 1) {
         filePrompt();
         timePrompt();
-        
-        const int len = 2;
+
         unsigned long timeLimit;
+        const int len = r;
 
         printf("You chose to calculate using the CPU\n");
-        
         printf("Enter desired simulation runtime or 0 for Default\n");
         scanf("%d", &userChoice);
 
@@ -152,16 +153,16 @@ int main (int argc, char *argv[]) {
             CPU_tick(bodies, len, 0.01);
 
             if (tick % 10000 == 0) {
-                print_bodies(bodies, len, 4000e3);  
-             
+                print_bodies(bi, len, DISTANCE_SCALE/40);  
+ 
                 printf("p:");
-                print_float3(bodies[0].position);
+                print_float3(bi[0].position);
                 printf("v:");
-                print_float3(bodies[0].velocity);
+                print_float3(bi[0].velocity);
                 printf(" p:");
-                print_float3(bodies[1].position);
+                print_float3(bi[1].position);
                 printf("v:");
-                print_float3(bodies[1].velocity);
+                print_float3(bi[1].velocity);
                 printf("\n");
             }
           
