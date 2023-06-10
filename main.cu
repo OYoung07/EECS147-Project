@@ -5,6 +5,8 @@
 #include "body.h"
 
 #define DISTANCE_SCALE 30000000
+#define MAX_LINE_LENGTH 100
+
 
 struct body bi[256];
 struct body solarSystem[10];
@@ -18,16 +20,42 @@ int filePrompt() {
     scanf("%d", &fileChoice);
 
     if (fileChoice == 1) {  
-        char symbol;
-        unsigned char symbol2;  
-        FILE *FileIn;
-        FileIn = fopen("bodydata.csv", "rt");
-        while ((symbol=getc(FileIn))!=EOF) {
-            symbol2 = (unsigned char) symbol;
-            if (symbol2 >= '0' && symbol2 <= '9') {
-                printf("%c", symbol);
-            }
+       FILE *file = fopen("bodydata.csv", "r");
+       if (file == NULL) {
+            printf("Failed to open file\n");
+            return 1; 
         }
+
+        char line[MAX_LINE_LENGTH];
+        fgets(line, MAX_LINE_LENGTH, file);
+
+        int i = 0;
+        while(fgets(line, MAX_LINE_LENGTH, file) != NULL && i < 10) {
+            scanf(line, "%d %lf %lf %lf %lf %lf %lf %lf %lf", 
+                &solarSystem[i].id,
+                &solarSystem[i].mass,
+                &solarSystem[i].radius,
+                &solarSystem[i].position.x,
+                &solarSystem[i].position.y,
+                &solarSystem[i].position.z,
+                &solarSystem[i].velocity.x,
+                &solarSystem[i].velocity.y,
+                &solarSystem[i].velocity.z);
+            i++;
+        }
+        fclose(file);
+
+        for (int j = 0; j < i; j++) {
+            printf("Body %d:\n", solarSystem[j].id);
+            printf("Mass %e\n", solarSystem[j].mass);
+            printf("Radius: %e\n", solarSystem[j].radius);
+            printf("X Position: %e\n", solarSystem[j].position.x);
+            printf("Y Position: %e\n", solarSystem[j].position.y);
+            printf("Z Position %e\n", solarSystem[j].position.z);
+            printf("X Velocity %e\n", solarSystem[j].velocity.x);
+            printf("Y Velocity %e\n", solarSystem[j].velocity.y);
+            printf("Z Velocity %e\n", solarSystem[j].velocity.z);
+        }           
        // printf("yippee\n");
     }
     
