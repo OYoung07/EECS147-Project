@@ -40,7 +40,7 @@ int filePrompt() {
             printf(line);
             printf("\n");
             
-            scanf(line, "%f,%f,%f,%f,%f,%f,%f,%f", 
+            sscanf(line, "%f,%f,%f,%f,%f,%f,%f,%f", 
                 &temp_mass,
                 &temp_radius,
                 &temp_position.x,
@@ -49,20 +49,13 @@ int filePrompt() {
                 &temp_velocity.x,
                 &temp_velocity.y,
                 &temp_velocity.z);
-
-                solarSystem[i].id = i;
-                solarSystem[i].mass = temp_mass;
-                solarSystem[i].radius = temp_radius;
-                solarSystem[i].position = temp_position;
-                solarSystem[i].velocity = temp_velocity;
-
             
             solarSystem[i].id = i;
             solarSystem[i].mass = temp_mass;
             solarSystem[i].radius = temp_radius;
             solarSystem[i].position = temp_position;
             solarSystem[i].velocity = temp_velocity;
-            
+
             i++;
         }
         fclose(file);
