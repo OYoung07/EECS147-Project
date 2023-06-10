@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "support.h"
 
 void initVector(float **vec_h, unsigned size)
@@ -54,14 +53,14 @@ unsigned long timerPrompt() {
     int userInput;
     unsigned long timeLimit;
 
-    printf("Enter max ticks for runtime:\nOR Enter 0 for Default.\n");
+    printf("Enter Max Ticks for Runtime:\nOR Enter 0 for Unlimited Ticks.\n"); //Prompts user to enter maximum ticks
     scanf("%d", &userInput);
 
     if ("%d", userInput == 0) {
-        timeLimit = 20000;
+        timeLimit = 2000000000; //basically infinite integer, change type if needed
     }
     else {
-        timeLimit = userInput;
+        timeLimit = userInput; //user chosen value
     }
 
     return timeLimit; 
