@@ -37,7 +37,10 @@ int filePrompt() {
         float3 temp_velocity;
 
         while(fgets(line, MAX_LINE_LENGTH, file) != NULL && i < 10) {
-           sscanf(line, "%f,%f,%f,%f,%f,%f,%f,%f",
+            printf(line);
+            printf("\n");
+            
+            scanf(line, "%f,%f,%f,%f,%f,%f,%f,%f", 
                 &temp_mass,
                 &temp_radius,
                 &temp_position.x,
@@ -53,7 +56,14 @@ int filePrompt() {
                 solarSystem[i].position = temp_position;
                 solarSystem[i].velocity = temp_velocity;
 
-                i++;
+            
+            solarSystem[i].id = i;
+            solarSystem[i].mass = temp_mass;
+            solarSystem[i].radius = temp_radius;
+            solarSystem[i].position = temp_position;
+            solarSystem[i].velocity = temp_velocity;
+            
+            i++;
         }
         fclose(file);
 
@@ -153,6 +163,7 @@ int main (int argc, char *argv[]) {
 
         if (tick % ticks_per_display == 0) {
             print_bodies(bi, len, DISTANCE_SCALE/40);
+            //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
         }
 
         tick++;
