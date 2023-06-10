@@ -50,3 +50,19 @@ float elapsedTime(Timer timer) {
                 + (timer.endTime.tv_usec - timer.startTime.tv_usec)/1.0e6));
 }
 
+unsigned long timerPrompt() {
+    int userInput;
+    unsigned long timeLimit;
+
+    printf("Enter desired simulation runtime:\n OR Enter 0 for Default.\n");
+    scanf("%d", &userInput);
+
+    if ("%d", userInput == 0) {
+        timeLimit = 2000000;
+    }
+    else {
+        timeLimit = userInput;
+    }
+
+    return timeLimit; 
+}
