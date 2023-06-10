@@ -12,7 +12,6 @@ int r = 100;
 
 int filePrompt() {
     int fileChoice;
-    srand(time(NULL));
 
     printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
@@ -37,7 +36,12 @@ int filePrompt() {
     }
     
     if (fileChoice == 2) {
+        int seedNum;
         randomizedChoice = 1;
+
+        printf("Please enter a seed number: ");
+        scanf("%d", &seedNum);
+        srand(seedNum);
     
         for (int i = 0; i < r; i++) {
 
@@ -71,13 +75,13 @@ int filePrompt() {
             bi[i].position.z = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             //printf("The following body z positions are: %d\n", bi[i].position.z);
 
-            bi[i].velocity.x = rand() % 10000;
+            bi[i].velocity.x = rand() % 10000 - (10000 / 2);
             //printf("The following body x velocities are: %d\n", bi[i].velocity.x);
 
-            bi[i].velocity.y = rand() % 10000;
+            bi[i].velocity.y = rand() % 10000 - (10000 / 2);
             //printf("The following body y velocities are: %d\n", bi[i].velocity.y);
 
-            bi[i].velocity.z = rand() % 10000;
+            bi[i].velocity.z = rand() % 10000 - (10000 / 2);
             //printf("The following body z velocities are: %d\n", bi[i].velocity.z);
         }
         
@@ -136,8 +140,8 @@ int main (int argc, char *argv[]) {
             unsigned long tick = 0;
            
             for (;;) {
-                 CPU_tick(bi, len, 0.01);
-                 if (tick % 10000 == 0) {
+                 CPU_tick(bi, len, 0.1);
+                 if (tick % 100 == 0) {
 
                  print_bodies(bi, len, DISTANCE_SCALE/40);
                  printf("p:");
@@ -158,7 +162,7 @@ int main (int argc, char *argv[]) {
             printf("HAHAHAH");
         }
 
- }
+    }
     if ("%d", userChoice == 2) {
         const int len = 2;
 
