@@ -125,16 +125,23 @@ float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &n
 void CPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
     float3 a;    
 
+    /* allocate temp array for calculation */
+    struct body* temp_bodies;
+    temp_bodies = (struct body*) malloc(num_bodies * sizeof(struct body));
+    memcpy(temp_bodies, bodies, (num_bodies * sizeof(struct body)));
+
     for (int i = 0; i < num_bodies; i++) {
-        a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
+        a = CPU_reduce_accel_vectors(bodies[i], temp_bodies, num_bodies);
         
         bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick        
         bodies[i].position = bodies[i].position + (bodies[i].velocity * t); //drift
        
-        a = CPU_reduce_accel_vectors(bodies[i], bodies, num_bodies);
+        a = CPU_reduce_accel_vectors(bodies[i], temp_bodies, num_bodies);
 
         bodies[i].velocity = bodies[i].velocity + (a * (t/2.0)); //kick 
     }
+
+    free(temp_bodies); //memory leaks are bad
 }
 
 void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_scale) {
