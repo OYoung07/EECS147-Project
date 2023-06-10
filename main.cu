@@ -93,12 +93,6 @@ int filePrompt() {
     }  
 }
 
-int timePrompt() {
-    int timeChoice;
-    printf("Press 1 for the number of ticks or 2 seconds per tick: ");
-    scanf("%d", &timeChoice);
-}
-
 int main (int argc, char *argv[]) {
     int userChoice; 
     Timer timer; 
@@ -106,7 +100,6 @@ int main (int argc, char *argv[]) {
     printf("Press 1 for CPU calculations or 2 for GPU calculations: ");
     scanf("%d", &userChoice);
     filePrompt();
-    timePrompt();
  
     const int len = numBodies;
 
@@ -114,7 +107,7 @@ int main (int argc, char *argv[]) {
     float secs_per_tick = 0.1;
     unsigned int ticks_per_display = 1000;
 
-    unsigned long long max_ticks = 10000; 
+    unsigned long long max_ticks = timerPrompt(); 
 
     /* main while loop */
     while (tick < max_ticks) {

@@ -54,11 +54,11 @@ unsigned long timerPrompt() {
     int userInput;
     unsigned long timeLimit;
 
-    printf("Enter desired simulation runtime:\n OR Enter 0 for Default.\n");
+    printf("Enter max ticks for runtime:\nOR Enter 0 for Default.\n");
     scanf("%d", &userInput);
 
     if ("%d", userInput == 0) {
-        timeLimit = 2000000;
+        timeLimit = 20000;
     }
     else {
         timeLimit = userInput;
