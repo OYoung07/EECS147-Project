@@ -27,7 +27,7 @@ int filePrompt() {
 
         printf("The files of this content contain:\n");
 
-        while (!feof(ptr)) {
+        for (!feof(ptr)) {
             ch = fgetc(ptr);
             printf("%c", ch);
         }
@@ -132,32 +132,34 @@ int main (int argc, char *argv[]) {
         
         if (randomizedChoice == 1) {
 
-        const int len = r;
+            const int len = r;
+            unsigned long tick = 0;
         
-        printf("You chose to calculate using the CPU\n");
-            
-        unsigned long tick = 0;
-        
-        for(;;) {
-            CPU_tick(bi, len, 0.001);
+            for(;;) {
+                CPU_tick(bi, len, 0.001);
 
-            if (tick % 10000 == 0) {
-                print_bodies(bi, len, DISTANCE_SCALE/40);  
+                if (tick % 10000 == 0) {
+                    print_bodies(bi, len, DISTANCE_SCALE/40);  
  
-                printf("p:");
-                print_float3(bi[0].position);
-                printf("v:");
-                print_float3(bi[0].velocity);
-                printf(" p:");
-                print_float3(bi[1].position);
-                printf("v:");
-                print_float3(bi[1].velocity);
-                printf("\n");
-            }
+                    printf("p:");
+                    print_float3(bi[0].position);
+                    printf("v:");
+                    print_float3(bi[0].velocity);
+                    printf(" p:");
+                    print_float3(bi[1].position);
+                    printf("v:");
+                    print_float3(bi[1].velocity);
+                    printf("\n");
+                }
           
-            tick++;
+                tick++;
+            }
         }
-      }
+
+        if (randomizedChoice == 0) {
+            printf("HAHAHAH");
+        }
+
     }
     if ("%d", userChoice == 2) {
         printf("You chose to calculate using the GPU\n");
