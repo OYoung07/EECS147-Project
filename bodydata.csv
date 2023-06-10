@@ -1,5 +1,4 @@
-Mass(kg),Radius(m),X_Position(m),Y_Position(m),Z_Position(m),X_Velocity(m/s),Y_Velocity(m/s),Z_Velocity(m/s)
-1.989e30,6.957e8,0,0,0,0,0,0
+1.989e30,6.957e8,1e1,0,0,1e1,0,0
 0.330e24,2439.5e3,57.9e9,0,0,47.4e3,0,0
 4.87e24,6052e3,108.2e9,0,0,35.0e3,0,0
 5.97e24,6378e3,149.6e9,0,0,29.8e3,0,0
