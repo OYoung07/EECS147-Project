@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "support.h"
 
 void initVector(float **vec_h, unsigned size)
@@ -51,25 +52,17 @@ float elapsedTime(Timer timer) {
 
 unsigned long timerPrompt() {
     int userInput;
-    unsigned long long timeLimit;
+    unsigned long timeLimit;
 
-    printf("Enter Max Ticks for Runtime:\nOR Enter 0 for Unlimited Ticks.\n"); //Prompts user to enter maximum ticks
+    printf("Enter Max Ticks for Runtime:\nOR Enter 0 for Unlimited Ticks.\n");
     scanf("%d", &userInput);
 
     if ("%d", userInput == 0) {
-        timeLimit = 2000000000; //basically infinite integer, change type if needed
+        timeLimit = 20000;
     }
     else {
-        timeLimit = userInput; //user chosen value
+        timeLimit = userInput;
     }
 
     return timeLimit; 
-}
-float tickTime() {
-    unsigned long userInput;
-
-    printf("Enter amount of ticks/second:\n");
-    scanf("%d", &userInput);
-
-    return userInput;
 }
