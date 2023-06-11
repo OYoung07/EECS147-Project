@@ -163,7 +163,7 @@ void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_
         for (int x = 0; x < 40; x++) {
             map[y][x] = ' ';
             for (int i = 0; i < num_bodies; i++) {
-                if (sqrt(pow(bodies[i].position.x - ((x-20) * tile_scale), 2) + pow(bodies[i].position.y - ((y-20) * tile_scale), 2)) <= bodies[i].radius) {
+                if (sqrt(pow(bodies[i].position.x - ((x-20.0) * tile_scale), 2.0) + pow(bodies[i].position.y - ((y-20.0) * tile_scale), 2.0)) < bodies[i].radius) {
                     map[y][x] = '@';
                 }  
             }

@@ -1,0 +1,3 @@
+Mass(kg),Radius(m),X_Position(m),Y_Position(m),Z_Position(m),X_Velocity(m/s),Y_Velocity(m/s),Z_Velocity(m/s)
+5.97e24,6378e3,0,0,0,0,0,0
+300,10,43378e3,0,0,0,0,0
