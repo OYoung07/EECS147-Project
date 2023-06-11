@@ -116,16 +116,81 @@ float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &n
     return accel;
 }
 
-unsigned int CPU_collisions(struct body* bodies, const int &num_bodies) {
-    unsigned int marked_for_death[MAX_BODIES];
-    unsigned int num_marked_for_death = 0;
+//collide two bodies inelasticly and return the resultant body
+__device__ __host__ struct body create_new_body(struct body* a, struct body* b) {
+    struct body c;
+
+    c.mass = a->mass + b->mass;
+    c.radius = cbrt((pow(a->radius,3) +  pow(b->radius,3))); //combine radii and conserve area
+
+    if (a->mass >= b->mass) {
+        c.position = a->position;
+    } else {
+        c.position = b->position;
+    }
+
+    c.velocity = ((a->velocity * a->mass) + (b->velocity * b->mass))/c.mass;
+
+    return c;
+}
+
+__device__ __host__ unsigned int delete_body_id(unsigned int id, struct body* bodies, const int &num_bodies) {
+    unsigned int delete_index = num_bodies;
 
     for (int i = 0; i < num_bodies; i++) {
-        for (int j = 0; j < num_bodies; j++) {
+        if (bodies[i].id = id) {
+            delete_index = i;
+            break;
+        }
+    }
+
+    if (delete_index < (num_bodies - 1)) {
+        for (int i = delete_index; i < (num_bodies - 1); i++) {
+            bodies[i] = bodies[i+1];
+        }
+        return num_bodies - 1;
+    } else if (delete_index == (num_bodies - 1)) {
+        return num_bodies - 1;
+    }
+
+    return num_bodies;    
+}
+
+unsigned int CPU_collisions(struct body* bodies, int num_bodies) {
+    unsigned int marked_for_death[MAX_BODIES];
+    unsigned int death_index = 0;
+
+    struct body new_bodies[10];
+    unsigned int new_body_index = 0;
+
+    unsigned int temp_id;    
+
+    for (int i = (num_bodies - 1); i >= 0; i--) {
+        for(int j = 0; j < num_bodies; j++) {
+            for (int k = 0; k < death_index; k++) {
+                if (marked_for_death[k] = bodies[i].id) {
+                    num_bodies = delete_body_id(bodies[i].id, bodies, num_bodies);
+                    break;
+                }
+            }
+
             if ((distance(&bodies[i], &bodies[j]) < (bodies[i].radius + bodies[j].radius)) && (i != j)) {
-                printf("Bodies %d and %d collide!\n", bodies[i].id, bodies[j].id); 
+                marked_for_death[death_index] = bodies[j].id;
+                death_index++;
+                
+                new_bodies[new_body_index] = create_new_body(&bodies[i], &bodies[j]);
+                new_bodies[new_body_index].id = bodies[i].id; //we know it will be unused
+                new_body_index++;
+                
+                num_bodies = delete_body_id(bodies[i].id, bodies, num_bodies);
+                break;              
             }
         }
+    }
+
+    for (int i = 0; i < new_body_index; i++) {
+        bodies[num_bodies] = new_bodies[i];
+        num_bodies++;   
     }
 
     return num_bodies;

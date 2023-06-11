@@ -118,7 +118,7 @@ int main (int argc, char *argv[]) {
     scanf("%d", &userChoice);
     filePrompt();
  
-    const int len = numBodies;
+    int len = numBodies;
 
     unsigned long long tick = 0;
 
@@ -149,7 +149,7 @@ int main (int argc, char *argv[]) {
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
             CPU_tick(bi, len, secs_per_tick);
-            CPU_collisions(bi, len);
+            len = CPU_collisions(bi, len);
         } else if ("%d", userChoice == 2) {
             GPU_tick_improved(bi, len, secs_per_tick); 
         }    
@@ -170,6 +170,7 @@ int main (int argc, char *argv[]) {
             print_bodies(bi, len, autoscale);//DISTANCE_SCALE/40);
             //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
             printf("Bodies:%d, Scale=%e meters, Tick=%lu\n", len, autoscale, tick);
+            print_body(&bi[0]);
         }
 
         tick++;
