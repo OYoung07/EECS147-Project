@@ -53,7 +53,7 @@ unsigned long timerPrompt() {
     int userInput;
     unsigned long long timeLimit;
 
-    printf("Enter Max Ticks for Runtime:\nOR Enter 0 for Unlimited Ticks.\n"); //Prompts user to enter maximum ticks
+    printf("Enter max ticks for runtime OR Enter 0 for unlimited ticks: "); //Prompts user to enter maximum ticks
     scanf("%d", &userInput);
 
     if ("%d", userInput == 0) {
@@ -65,11 +65,21 @@ unsigned long timerPrompt() {
 
     return timeLimit; 
 }
+
 float tickTime() {
     unsigned long userInput;
 
-    printf("Enter amount of ticks/second:\n");
+    printf("Enter number of ticks/second [DEFAULT: 1] : ");
     scanf("%d", &userInput);
 
+    return userInput;
+}
+
+unsigned int ticksPerDisplay() {
+    unsigned long userInput;
+
+    printf("Enter number of ticks per display frame [DEFAULT: 100] : ");
+    scanf("%d", &userInput);
+    
     return userInput;
 }
