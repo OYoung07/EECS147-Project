@@ -80,7 +80,18 @@ int filePrompt() {
         srand(seedNum);
         printf("Enter the number of bodies you want to simulate [MAX:256] : ");
         scanf("%d", &numBodies);
-    
+   
+        /* 
+        bi[0].mass = 1e24;
+        bi[0].radius = 2000e3;
+        bi[0].position.x = 0;
+        bi[0].position.y = 0;
+        bi[0].position.z = 0;
+        bi[0].velocity.x = 0;//rand() % 10000 - (10000 / 2);
+        bi[0].velocity.y = 0;//rand() % 10000 - (10000 / 2);
+        bi[0].velocity.z = 0;//rand() % 10000 - (10000 / 2);
+        */
+
         for (int i = 0; i < numBodies; i++) {
             bi[i].id = i;
             bi[i].mass = (rand() % 1000) * (10e20);
@@ -155,7 +166,7 @@ int main (int argc, char *argv[]) {
         }    
 
         if (tick % ticks_per_display == 0) {
-            /*
+           /* 
             //scale bodies
             max_distance = 0; 
             for (int i = 0; i < numBodies; i++) {
@@ -171,10 +182,6 @@ int main (int argc, char *argv[]) {
             //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
             printf("Bodies:%d, Scale=%e meters, Tick=%lu\n", len, autoscale, tick);
             //print_body(&bi[0]);
-        }
-
-        if (len == 1) {
-            break; //DEBUG
         }
 
         tick++;
