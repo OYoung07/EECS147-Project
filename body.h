@@ -13,8 +13,11 @@ struct body {
 
 float distance(struct body* b1, struct body* b2);
 float calculate_FG(struct body* b1, struct body* b2);
+float calculate_EG(struct body* b1, struct body* b2); 
 float3 get_direction_vector(struct body* origin, struct body* actor);
 float3 get_accel_vector(struct body* origin, struct body* actor);
+float magnitude(float3 v);
+float get_body_energy(struct body* b);
 float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &num_bodies);
 __device__ __host__ struct body create_new_body(struct body* a, struct body* b); 
 __device__ __host__ unsigned int delete_body_id(unsigned int id, struct body* bodies, const int &num_bodies);

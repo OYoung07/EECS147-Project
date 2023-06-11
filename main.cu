@@ -147,6 +147,10 @@ int main (int argc, char *argv[]) {
     float max_distance = 0;
     float autoscale;
 
+    double totalmass;
+    double totalenergy_k;
+    double totalenergy_p;
+
     for (int i = 0; i < numBodies; i++) {
         if (distance(&origin, &bi[i]) > max_distance) {
             max_distance = distance(&origin, &bi[i]);   
@@ -166,22 +170,25 @@ int main (int argc, char *argv[]) {
         }    
 
         if (tick % ticks_per_display == 0) {
-           /* 
-            //scale bodies
-            max_distance = 0; 
-            for (int i = 0; i < numBodies; i++) {
-                if (distance(&origin, &bi[i]) > max_distance) {
-                    max_distance = distance(&origin, &bi[i]);   
+            print_bodies(bi, len, autoscale);//DISTANCE_SCALE/40);
+            //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
+            
+            totalmass = 0.0;
+            totalenergy_k = 0.0;
+            for (int i = 0; i < len; i++) {
+                totalmass += (double)bi[i].mass;
+                totalenergy_k += (double)get_body_energy(&bi[i]);
+            }
+
+            totalenergy_p = 0.0;
+            for (int i = 0; i < (len - 1); i++) { 
+                for (int j = (i+1); j < len; j++) {
+                    totalenergy_p += (double)calculate_EG(&bi[i], &bi[j]);
                 }
             }
 
-            autoscale = (max_distance * 2.0) / 40.0;
-            */
-
-            print_bodies(bi, len, autoscale);//DISTANCE_SCALE/40);
-            //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
-            printf("Bodies:%d, Scale=%e meters, Tick=%lu\n", len, autoscale, tick);
-            //print_body(&bi[0]);
+            printf("Bodies:%d, System Mass:%e kg, Kinetic Energy:%e J, Potential Energy:%e J, Total Energy:%e J, Scale=%e meters, Tick=%lu\n", 
+                    len, totalmass, totalenergy_k, totalenergy_p, (totalenergy_k - totalenergy_p), autoscale, tick);
         }
 
         tick++;

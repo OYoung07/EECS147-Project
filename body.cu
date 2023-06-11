@@ -78,6 +78,17 @@ float calculate_FG(struct body* b1, struct body* b2) {
     return (float)mag_F;
 }
 
+//get gravitional energy
+float calculate_EG(struct body* b1, struct body* b2) {
+    double G = 6.674e-11;
+    double d = distance(b1, b2);
+    double mag_F; 
+
+    mag_F = (G * (double)b1->mass *(double)b2->mass)/d; //gravity formula
+
+    return (float)mag_F;
+}
+
 //get direction vector between two bodies
 float3 get_direction_vector(struct body* origin, struct body* actor) {
     float3 direction;
@@ -98,6 +109,14 @@ float3 get_accel_vector(struct body* origin, struct body* actor) {
     float3 A_vec = F_vec / origin->mass; //F = MA -> A = F/M
 
     return A_vec;
+}
+
+float magnitude(float3 v) {
+    return sqrt(pow(v.x,2) + pow(v.y,2) + pow(v.z,2));
+}
+
+float get_body_energy(struct body* b) {
+    return (0.5 * b->mass * pow(magnitude(b->velocity),2.0)); //0.5mv^2
 }
 
 //calculate mean acceleration vector from all other bodies
