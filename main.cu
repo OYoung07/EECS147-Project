@@ -95,18 +95,19 @@ int filePrompt() {
         }
     } 
 
-    
-        for (int j = 0; j < numBodies; j++) {
-            printf("Body %d:\n", bi[j].id);
-            printf("Mass %e\n", bi[j].mass);
-            printf("Radius: %e\n", bi[j].radius);
-            printf("X Position: %e\n", bi[j].position.x);
-            printf("Y Position: %e\n", bi[j].position.y);
-            printf("Z Position %e\n", bi[j].position.z);
-            printf("X Velocity %e\n", bi[j].velocity.x);
-            printf("Y Velocity %e\n", bi[j].velocity.y);
-            printf("Z Velocity %e\n", bi[j].velocity.z);
-        }     
+    /*
+    for (int j = 0; j < numBodies; j++) {
+        printf("Body %d:\n", bi[j].id);
+        printf("Mass %e\n", bi[j].mass);
+        printf("Radius: %e\n", bi[j].radius);
+        printf("X Position: %e\n", bi[j].position.x);
+        printf("Y Position: %e\n", bi[j].position.y);
+        printf("Z Position %e\n", bi[j].position.z);
+        printf("X Velocity %e\n", bi[j].velocity.x);
+        printf("Y Velocity %e\n", bi[j].velocity.y);
+        printf("Z Velocity %e\n", bi[j].velocity.z);
+    }
+    */    
 }
 
 int main (int argc, char *argv[]) {
@@ -124,7 +125,9 @@ int main (int argc, char *argv[]) {
     unsigned int ticks_per_display = 1000;
 
     unsigned long long max_ticks = timerPrompt(); 
+
     float secs_per_tick = tickTime(); //0.1 by default
+
     /* auto scaling code */
     struct body origin;
     origin.position.x = 0;
@@ -139,7 +142,7 @@ int main (int argc, char *argv[]) {
         }
     }
 
-    autoscale = max_distance * 1.5 / 40.0;
+    autoscale = (max_distance * 2.0) / 40.0;
 
     startTime(&timer);
     /* main while loop */
