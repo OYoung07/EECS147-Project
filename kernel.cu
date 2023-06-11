@@ -20,13 +20,13 @@ __device__ float GPU_distance(struct body* b1, struct body* b2) {
 
 //get gravity force magnitude between two bodies
 __device__ float GPU_calculate_FG(struct body* b1, struct body* b2) {
-    float G = 6.674e-11;
-    float d = GPU_distance(b1, b2);
-    float mag_F; 
+    double G = 6.674e-11;
+    double d = GPU_distance(b1, b2);
+    double mag_F; 
 
-    mag_F = (G * b1->mass * b2->mass)/pow(d, 2); //gravity formula
+    mag_F = (G *(double)b1->mass *(double)b2->mass)/pow(d, 2); //gravity formula
 
-    return mag_F;
+    return (float)mag_F;
 }
 
 //get direction vector between two bodies

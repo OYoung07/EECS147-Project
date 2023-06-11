@@ -69,13 +69,13 @@ float distance(struct body* b1, struct body* b2) {
 
 //get gravity force magnitude between two bodies
 float calculate_FG(struct body* b1, struct body* b2) {
-    float G = 6.674e-11;
-    float d = distance(b1, b2);
-    float mag_F; 
+    double G = 6.674e-11;
+    double d = distance(b1, b2);
+    double mag_F; 
 
-    mag_F = (G * b1->mass * b2->mass)/pow(d, 2); //gravity formula
+    mag_F = (G * (double)b1->mass *(double)b2->mass)/pow(d, 2); //gravity formula
 
-    return mag_F;
+    return (float)mag_F;
 }
 
 //get direction vector between two bodies
@@ -106,12 +106,6 @@ float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &n
     accel.x = 0;
     accel.y = 0;
     accel.z = 0;    
-
-    /* //debug
-    for (int i = 0; i < num_bodies; i++) {
-        print_body(&bodies[i]);
-    }
-    */
 
     for (int i = 0; i < num_bodies; i++) {
         if (bodies[i].id != b.id) { //if not self
@@ -180,9 +174,7 @@ void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_
     for (int i = 0; i < num_bodies; i++) {
         y_index = (bodies[i].position.y / tile_scale) + 20;
         x_index = (bodies[i].position.x / tile_scale) + 20;
-       
-        printf("%f,%f %f %f,%f\n", bodies[i].position.x,bodies[i].position.y,tile_scale,x_index,y_index);
- 
+        
         if (y_index < 40 && y_index >= 0 && x_index < 40 && x_index >= 0) {
             if (map[(int)y_index][(int)x_index] != '@') {
                 map[(int)y_index][(int)x_index] = '.';

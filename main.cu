@@ -52,28 +52,23 @@ int filePrompt() {
                 &temp_velocity.z);
             
             bi[i].id = i;
-            bi[i].mass = temp_mass;
-            bi[i].radius = temp_radius;
-            bi[i].position = temp_position;
-            bi[i].velocity = temp_velocity;
+            bi[i].mass = (float) temp_mass;
+            bi[i].radius = (float) temp_radius;
+            
+            bi[i].position.x = (float) temp_position.x;
+            bi[i].position.y = (float) temp_position.y;
+            bi[i].position.z = (float) temp_position.z;
+
+            bi[i].velocity.x = (float) temp_velocity.x;
+            bi[i].velocity.y = (float) temp_velocity.y;
+            bi[i].velocity.z = (float) temp_velocity.z;
 
             i++;
         }
         fclose(file);
 
         numBodies = i;
-
-        for (int j = 0; j < i; j++) {
-            printf("Body %d:\n", bi[j].id);
-            printf("Mass %e\n", bi[j].mass);
-            printf("Radius: %e\n", bi[j].radius);
-            printf("X Position: %e\n", bi[j].position.x);
-            printf("Y Position: %e\n", bi[j].position.y);
-            printf("Z Position %e\n", bi[j].position.z);
-            printf("X Velocity %e\n", bi[j].velocity.x);
-            printf("Y Velocity %e\n", bi[j].velocity.y);
-            printf("Z Velocity %e\n", bi[j].velocity.z);
-        }                  
+              
     }
     
     if (fileChoice == 2) {
@@ -98,7 +93,20 @@ int filePrompt() {
             bi[i].velocity.y = rand() % 10000 - (10000 / 2);
             bi[i].velocity.z = rand() % 10000 - (10000 / 2);
         }
-    }  
+    } 
+
+    
+        for (int j = 0; j < numBodies; j++) {
+            printf("Body %d:\n", bi[j].id);
+            printf("Mass %e\n", bi[j].mass);
+            printf("Radius: %e\n", bi[j].radius);
+            printf("X Position: %e\n", bi[j].position.x);
+            printf("Y Position: %e\n", bi[j].position.y);
+            printf("Z Position %e\n", bi[j].position.z);
+            printf("X Velocity %e\n", bi[j].velocity.x);
+            printf("Y Velocity %e\n", bi[j].velocity.y);
+            printf("Z Velocity %e\n", bi[j].velocity.z);
+        }     
 }
 
 int main (int argc, char *argv[]) {
@@ -117,6 +125,22 @@ int main (int argc, char *argv[]) {
 
     unsigned long long max_ticks = timerPrompt(); 
 
+    /* auto scaling code */
+    struct body origin;
+    origin.position.x = 0;
+    origin.position.y = 0;
+    origin.position.z = 0;
+    float max_distance = 0;
+    float autoscale;
+
+    for (int i = 0; i < numBodies; i++) {
+        if (distance(&origin, &bi[i]) > max_distance) {
+            max_distance = distance(&origin, &bi[i]);   
+        }
+    }
+
+    autoscale = max_distance * 1.5 / 40.0;
+
     /* main while loop */
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
@@ -127,8 +151,7 @@ int main (int argc, char *argv[]) {
         }    
 
         if (tick % ticks_per_display == 0) {
-            //printf()
-            print_bodies(bi, len, 3e10);//DISTANCE_SCALE/40);
+            print_bodies(bi, len, autoscale);//DISTANCE_SCALE/40);
             //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
         }
 
