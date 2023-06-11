@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#define BLOCK_SIZE 16
+#define MAX_BODIES 256
 
 /* operator overloading for float3 */
 __device__ __host__  float3 operator+(const float3 &a, const float3 &b) {
@@ -120,6 +120,21 @@ float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &n
     }
 
     return accel;
+}
+
+unsigned int CPU_collisions(struct body* bodies, const int &num_bodies) {
+    unsigned int marked_for_death[MAX_BODIES];
+    unsigned int num_marked_for_death = 0;
+
+    for (int i = 0; i < num_bodies; i++) {
+        for (int j = 0; j < num_bodies; j++) {
+            if ((distance(&bodies[i], &bodies[j]) < (bodies[i].radius + bodies[j].radius)) && (i != j)) {
+                printf("Bodies %d and %d collide!\n", bodies[i].id, bodies[j].id); 
+            }
+        }
+    }
+
+    return num_bodies;
 }
 
 void CPU_tick(struct body* bodies, const int &num_bodies, const float &t) {

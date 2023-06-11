@@ -7,7 +7,6 @@
 #define DISTANCE_SCALE 30000000
 #define MAX_LINE_LENGTH 100
 
-
 struct body bi[256];
 struct body solarSystem[10];
 int randomizedChoice = 0;
@@ -16,7 +15,7 @@ int numBodies;
 int filePrompt() {
     int fileChoice;
 
-    printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
+    printf("Press 1 for simulation from file or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
 
     if (fileChoice == 1) {  
@@ -71,8 +70,7 @@ int filePrompt() {
             printf("X Velocity %e\n", solarSystem[j].velocity.x);
             printf("Y Velocity %e\n", solarSystem[j].velocity.y);
             printf("Z Velocity %e\n", solarSystem[j].velocity.z);
-        }           
-       // printf("yippee\n");
+        }
     }
     
     if (fileChoice == 2) {
@@ -86,48 +84,17 @@ int filePrompt() {
         scanf("%d", &numBodies);
     
         for (int i = 0; i < numBodies; i++) {
-
-            //int test;
-            //test = rand() % 10;
-            //printf("%d", test);
-            //printf(" \n");
-
-            //int testTwo;
-            //testTwo = rand() % 10;
-            //printf("%d", testTwo);
-            //printf(" \n");
-
             bi[i].id = i;
-            //printf("The following body ids are: ");
-            //printf("%d", bi[i].id);
-            //printf(" \n");            
-
             bi[i].mass = (rand() % 1000) * (10e20);
-            //printf("The following body masses are: %d\n", bi[i].mass);
-            
+           
             bi[i].radius = rand() % 1000;
-            //printf("The following body radii are: %d\n", bi[i].radius);
-
             bi[i].position.x = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
-            //printf("The following body x positions are: %d\n", bi[i].position.x);
-
             bi[i].position.y = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
-            //printf("The following body y positions are: %d\n", bi[i].position.y);
-
             bi[i].position.z = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
-            //printf("The following body z positions are: %d\n", bi[i].position.z);
-
             bi[i].velocity.x = rand() % 10000 - (10000 / 2);
-            //printf("The following body x velocities are: %d\n", bi[i].velocity.x);
-
             bi[i].velocity.y = rand() % 10000 - (10000 / 2);
-            //printf("The following body y velocities are: %d\n", bi[i].velocity.y);
-
             bi[i].velocity.z = rand() % 10000 - (10000 / 2);
-            //printf("The following body z velocities are: %d\n", bi[i].velocity.z);
         }
-        
-       // printf("yikers\n");
     }  
 }
 
@@ -151,6 +118,7 @@ int main (int argc, char *argv[]) {
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
             CPU_tick(bi, len, secs_per_tick);
+            CPU_collisions(bi, len);
         } else if ("%d", userChoice == 2) {
             GPU_tick_improved(bi, len, secs_per_tick); 
         }    
