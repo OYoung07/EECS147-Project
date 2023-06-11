@@ -161,8 +161,8 @@ void CPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
 
 void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_scale) {
     char map[40][40];
-    int y_index;
-    int x_index;    
+    float y_index;
+    float x_index;    
 
     //draw true to size
     for (int y = 0; y < 40; y++) {
@@ -178,12 +178,14 @@ void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_
 
     //draw as point mass if too small
     for (int i = 0; i < num_bodies; i++) {
-        y_index = (int)(bodies[i].position.y / tile_scale) + 20;
-        x_index = (int)(bodies[i].position.x / tile_scale) + 20;
-        
+        y_index = (bodies[i].position.y / tile_scale) + 20;
+        x_index = (bodies[i].position.x / tile_scale) + 20;
+       
+        printf("%f,%f %f %f,%f\n", bodies[i].position.x,bodies[i].position.y,tile_scale,x_index,y_index);
+ 
         if (y_index < 40 && y_index >= 0 && x_index < 40 && x_index >= 0) {
-            if (map[y_index][x_index] != '@') {
-                map[y_index][x_index] = '.';
+            if (map[(int)y_index][(int)x_index] != '@') {
+                map[(int)y_index][(int)x_index] = '.';
             }
         }
     }

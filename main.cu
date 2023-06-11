@@ -127,7 +127,8 @@ int main (int argc, char *argv[]) {
         }    
 
         if (tick % ticks_per_display == 0) {
-            print_bodies(bi, len, 2.59e10);//DISTANCE_SCALE/40);
+            //printf()
+            print_bodies(bi, len, 3e10);//DISTANCE_SCALE/40);
             //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
         }
 
