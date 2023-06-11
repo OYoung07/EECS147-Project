@@ -126,7 +126,7 @@ int main (int argc, char *argv[]) {
 
     unsigned long long max_ticks = timerPrompt(); 
 
-    float secs_per_tick = tickTime(); //0.1 by default
+    float secs_per_tick = tickTime(); //1 by default
 
     /* auto scaling code */
     struct body origin;
@@ -162,7 +162,7 @@ int main (int argc, char *argv[]) {
         tick++;
     }
     stopTime(&timer);
-    printf("%f s\n",elapsedTime(timer));
+    printf("Simulation Elapsed Time:%f s\n",elapsedTime(timer));
     
     printf("haha lmao\n");
 }
