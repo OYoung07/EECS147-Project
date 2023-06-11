@@ -156,6 +156,16 @@ __device__ __host__ unsigned int delete_body_id(unsigned int id, struct body* bo
     return num_bodies;    
 }
 
+struct body* get_body(unsigned int id, struct body* bodies, const int &num_bodies) {
+    for (int i = 0; i < num_bodies; i++) {
+        if (bodies[i].id == id) {
+            return &bodies[i];
+        }
+    }
+
+    return NULL;
+}
+
 unsigned int CPU_collisions(struct body* bodies, int num_bodies) {
     struct body delete_bodies[MAX_BODIES];
     unsigned int delete_index = 0;

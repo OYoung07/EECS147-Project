@@ -130,7 +130,7 @@ void GPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
 }
 
 //better GPU kernel
-__global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigned int num_bodies, const float t) {
+__global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigned int num_bodies, const float t, unsigned int* collisions) {
     __shared__ struct body temp_bodies_shared[SHARED_MEM_SIZE]; 
 
     unsigned int tx = threadIdx.x;
@@ -141,7 +141,7 @@ __global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigne
     float3 a;
 
     if (index < num_bodies) { //populate shared memory
-       temp_bodies_shared[index] = output_bodies[index]; 
+        temp_bodies_shared[index] = output_bodies[index]; 
     }
 
     __syncthreads();
@@ -173,22 +173,39 @@ __global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigne
     __syncthreads();
 
     //do collisions here
+    if (index < num_bodies) {
+        for (int i = 0; i < num_bodies; i++) {
+            if ((GPU_distance(&output_bodies[index], &output_bodies[i]) < (output_bodies[index].radius + output_bodies[i].radius)) && (index != i)) {
+                atomicAdd(collisions, 1); //add to collisions       
+            }
+        }
+    }
 }
 
-void GPU_tick_improved(struct body* CPU_bodies, const unsigned int &num_bodies, const float &t) {
+unsigned int GPU_tick_improved(struct body* CPU_bodies, unsigned int num_bodies, const float &t) {
     cudaError_t cuda_ret;
     struct body* GPU_bodies;
 
-    dim3 DimBlock(BLOCK_SIZE, 1, 1);
-    dim3 DimGrid(ceil((float)num_bodies/((float)BLOCK_SIZE)), 1, 1);
+    unsigned int* GPU_collisions;
+    unsigned int collisions;
+    
+    struct body new_bodies[128];
+    unsigned int new_bodies_index = 0;
 
+    collisions = 0;
+
+    /* GPU inits and kernel execution */
+    cudaMalloc((void**) &GPU_collisions, sizeof(unsigned int));
     cudaMalloc((void**) &GPU_bodies, sizeof(struct body) * num_bodies); 
     cudaDeviceSynchronize();   
  
+    cudaMemcpy(GPU_collisions, &collisions, sizeof(unsigned int), cudaMemcpyHostToDevice);
     cudaMemcpy(GPU_bodies, CPU_bodies, sizeof(struct body) * num_bodies, cudaMemcpyHostToDevice);
     cudaDeviceSynchronize();
-
-    GPU_tick_shared_memory<<<DimGrid,DimBlock>>>(GPU_bodies, num_bodies, t);
+ 
+    dim3 DimBlock(BLOCK_SIZE, 1, 1);
+    dim3 DimGrid(ceil((float)num_bodies/((float)BLOCK_SIZE)), 1, 1);
+    GPU_tick_shared_memory<<<DimGrid,DimBlock>>>(GPU_bodies, num_bodies, t, GPU_collisions);
 
     cuda_ret = cudaDeviceSynchronize();
     if (cuda_ret != cudaSuccess) {
@@ -196,9 +213,16 @@ void GPU_tick_improved(struct body* CPU_bodies, const unsigned int &num_bodies, 
         printf("Oppsie woopsie I did a fucky wucky (GPU kernel failed, lmao)\n");
     }
 
+    cudaMemcpy(&collisions, GPU_collisions, sizeof(unsigned int), cudaMemcpyDeviceToHost);
     cudaMemcpy(CPU_bodies, GPU_bodies, sizeof(struct body) * num_bodies, cudaMemcpyDeviceToHost);
     cudaDeviceSynchronize();
 
+    cudaFree(GPU_collisions);
     cudaFree(GPU_bodies);
-    cudaDeviceSynchronize();
+
+    if (collisions > 0) {
+       num_bodies = CPU_collisions(CPU_bodies, num_bodies); 
+    }
+
+    return num_bodies;
 }

@@ -18,6 +18,7 @@ float3 get_accel_vector(struct body* origin, struct body* actor);
 float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &num_bodies);
 __device__ __host__ struct body create_new_body(struct body* a, struct body* b); 
 __device__ __host__ unsigned int delete_body_id(unsigned int id, struct body* bodies, const int &num_bodies);
+struct body* get_body(unsigned int id, struct body* bodies, const int &num_bodies); 
  
 void CPU_tick(struct body* bodies, const int &num_bodies, const float &t);
 unsigned int CPU_collisions(struct body* bodies, int num_bodies); 

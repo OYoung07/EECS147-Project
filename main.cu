@@ -162,7 +162,7 @@ int main (int argc, char *argv[]) {
             CPU_tick(bi, len, secs_per_tick);
             len = CPU_collisions(bi, len);
         } else if ("%d", userChoice == 2) {
-            GPU_tick_improved(bi, len, secs_per_tick); 
+            len = GPU_tick_improved(bi, len, secs_per_tick); 
         }    
 
         if (tick % ticks_per_display == 0) {
