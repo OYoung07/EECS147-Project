@@ -17,6 +17,7 @@ void startTime(Timer* timer);
 void stopTime(Timer* timer);
 float elapsedTime(Timer timer);
 unsigned long timerPrompt();
+float tickTime();
 #ifdef __cplusplus
 }
 #endif

@@ -121,16 +121,12 @@ int main (int argc, char *argv[]) {
     const int len = numBodies;
 
     unsigned long long tick = 0;
-    float secs_per_tick = 0.1;
+
     unsigned int ticks_per_display = 1000;
 
     unsigned long long max_ticks = timerPrompt(); 
 
-    printf("Input number of seconds per tick: ");
-    scanf("%f", &secs_per_tick);
-
-    printf("Input number of ticks per display frame: ");
-    scanf("%d", &ticks_per_display);
+    float secs_per_tick = tickTime(); //0.1 by default
 
     /* auto scaling code */
     struct body origin;
@@ -148,6 +144,7 @@ int main (int argc, char *argv[]) {
 
     autoscale = (max_distance * 2.0) / 40.0;
 
+    startTime(&timer);
     /* main while loop */
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
@@ -177,6 +174,8 @@ int main (int argc, char *argv[]) {
 
         tick++;
     }
-
+    stopTime(&timer);
+    printf("%f s\n",elapsedTime(timer));
+    
     printf("haha lmao\n");
 }

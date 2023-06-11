@@ -51,7 +51,7 @@ float elapsedTime(Timer timer) {
 
 unsigned long timerPrompt() {
     int userInput;
-    unsigned long timeLimit;
+    unsigned long long timeLimit;
 
     printf("Enter Max Ticks for Runtime:\nOR Enter 0 for Unlimited Ticks.\n"); //Prompts user to enter maximum ticks
     scanf("%d", &userInput);
@@ -64,4 +64,12 @@ unsigned long timerPrompt() {
     }
 
     return timeLimit; 
+}
+float tickTime() {
+    unsigned long userInput;
+
+    printf("Enter amount of ticks/second:\n");
+    scanf("%d", &userInput);
+
+    return userInput;
 }
