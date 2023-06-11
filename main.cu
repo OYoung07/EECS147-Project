@@ -158,8 +158,21 @@ int main (int argc, char *argv[]) {
         }    
 
         if (tick % ticks_per_display == 0) {
+            /*
+            //scale bodies
+            max_distance = 0; 
+            for (int i = 0; i < numBodies; i++) {
+                if (distance(&origin, &bi[i]) > max_distance) {
+                    max_distance = distance(&origin, &bi[i]);   
+                }
+            }
+
+            autoscale = (max_distance * 2.0) / 40.0;
+            */
+
             print_bodies(bi, len, autoscale);//DISTANCE_SCALE/40);
             //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
+            printf("Bodies:%d, Scale=%e meters, Tick=%lu\n", len, autoscale, tick);
         }
 
         tick++;
