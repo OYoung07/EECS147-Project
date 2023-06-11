@@ -67,10 +67,10 @@ unsigned long timerPrompt() {
 }
 
 float tickTime() {
-    unsigned long userInput;
+    float userInput;
 
-    printf("Enter number of ticks/second [DEFAULT: 1] : ");
-    scanf("%d", &userInput);
+    printf("Enter number of secs/tick [DEFAULT: 1] : ");
+    scanf("%f", &userInput);
 
     return userInput;
 }

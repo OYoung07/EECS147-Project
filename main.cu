@@ -85,13 +85,13 @@ int filePrompt() {
             bi[i].id = i;
             bi[i].mass = (rand() % 1000) * (10e20);
            
-            bi[i].radius = rand() % 1000;
+            bi[i].radius = (rand() % 100000);
             bi[i].position.x = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             bi[i].position.y = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             bi[i].position.z = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
-            bi[i].velocity.x = rand() % 10000 - (10000 / 2);
-            bi[i].velocity.y = rand() % 10000 - (10000 / 2);
-            bi[i].velocity.z = rand() % 10000 - (10000 / 2);
+            bi[i].velocity.x = 0;//rand() % 10000 - (10000 / 2);
+            bi[i].velocity.y = 0;//rand() % 10000 - (10000 / 2);
+            bi[i].velocity.z = 0;//rand() % 10000 - (10000 / 2);
         }
     } 
 
@@ -170,7 +170,11 @@ int main (int argc, char *argv[]) {
             print_bodies(bi, len, autoscale);//DISTANCE_SCALE/40);
             //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
             printf("Bodies:%d, Scale=%e meters, Tick=%lu\n", len, autoscale, tick);
-            print_body(&bi[0]);
+            //print_body(&bi[0]);
+        }
+
+        if (len == 1) {
+            break; //DEBUG
         }
 
         tick++;
@@ -178,7 +182,7 @@ int main (int argc, char *argv[]) {
     stopTime(&timer);
     
     printf("----=====+++ SIMULATION RESULTS +++=====----\n");
-    printf("Elapsed Time: %f s | ",elapsedTime(timer));  printf("Seed: %d | ", seedNum); printf("Ticks/Second: %f | ", secs_per_tick);  printf("Max Ticks: %lu\n", max_ticks);
+    printf("Elapsed Time: %f s | ",elapsedTime(timer));  printf("Seed: %d | ", seedNum); printf("Seconds/Tick: %f | ", secs_per_tick);  printf("Max Ticks: %lu\n", max_ticks);
  
     printf("haha lmao\n");
 }

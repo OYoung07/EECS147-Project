@@ -138,7 +138,7 @@ __device__ __host__ unsigned int delete_body_id(unsigned int id, struct body* bo
     unsigned int delete_index = num_bodies;
 
     for (int i = 0; i < num_bodies; i++) {
-        if (bodies[i].id = id) {
+        if (bodies[i].id == id) {
             delete_index = i;
             break;
         }
@@ -157,38 +157,45 @@ __device__ __host__ unsigned int delete_body_id(unsigned int id, struct body* bo
 }
 
 unsigned int CPU_collisions(struct body* bodies, int num_bodies) {
-    unsigned int marked_for_death[MAX_BODIES];
-    unsigned int death_index = 0;
+    struct body delete_bodies[MAX_BODIES];
+    unsigned int delete_index = 0;
 
-    struct body new_bodies[10];
-    unsigned int new_body_index = 0;
+    struct body new_bodies[128];
+    unsigned int new_bodies_index = 0;
 
-    unsigned int temp_id;    
+    char deleted;
 
-    for (int i = (num_bodies - 1); i >= 0; i--) {
-        for(int j = 0; j < num_bodies; j++) {
-            for (int k = 0; k < death_index; k++) {
-                if (marked_for_death[k] = bodies[i].id) {
-                    num_bodies = delete_body_id(bodies[i].id, bodies, num_bodies);
-                    break;
-                }
+    for (int i = 0; i < num_bodies; i++) {
+        deleted = 0;
+
+        for (int k = 0; k < delete_index; k++) { //if body is marked for death
+            if (delete_bodies[k].id == bodies[i].id) {
+                deleted = 1;
+                break;
             }
+        }
 
-            if ((distance(&bodies[i], &bodies[j]) < (bodies[i].radius + bodies[j].radius)) && (i != j)) {
-                marked_for_death[death_index] = bodies[j].id;
-                death_index++;
-                
-                new_bodies[new_body_index] = create_new_body(&bodies[i], &bodies[j]);
-                new_bodies[new_body_index].id = bodies[i].id; //we know it will be unused
-                new_body_index++;
-                
-                num_bodies = delete_body_id(bodies[i].id, bodies, num_bodies);
-                break;              
+        if (deleted == 0) {
+            for (int j = 0; j < num_bodies; j++) {
+                if ((distance(&bodies[i], &bodies[j]) < (bodies[i].radius + bodies[j].radius)) && (i != j)) { //if colliding
+                    delete_bodies[delete_index] = bodies[i]; //mark for deletion
+                    delete_index++;
+                    delete_bodies[delete_index] = bodies[j];
+                    delete_index++;
+
+                    new_bodies[new_bodies_index] = create_new_body(&bodies[i], &bodies[j]);
+                    new_bodies[new_bodies_index].id = bodies[i].id; //get new ID we know won't be used
+                    new_bodies_index++;           
+                }
             }
         }
     }
 
-    for (int i = 0; i < new_body_index; i++) {
+    for (int i = 0; i < delete_index; i++) { //delete bodies
+        num_bodies = delete_body_id(delete_bodies[i].id, bodies, num_bodies);        
+    }
+
+    for (int i = 0; i < new_bodies_index; i++) { //add bodies
         bodies[num_bodies] = new_bodies[i];
         num_bodies++;   
     }
