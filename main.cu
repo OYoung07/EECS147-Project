@@ -10,6 +10,7 @@
 struct body bi[256];
 int randomizedChoice = 0;
 int numBodies;
+int seedNum;
 
 int filePrompt() {
     int fileChoice;
@@ -72,13 +73,12 @@ int filePrompt() {
     }
     
     if (fileChoice == 2) {
-        int seedNum;
         randomizedChoice = 1;
 
         printf("Enter a seed number: ");
         scanf("%d", &seedNum);
         srand(seedNum);
-        printf("Enter the number of bodies you want to simulate: ");
+        printf("Enter the number of bodies you want to simulate [MAX:256] : ");
         scanf("%d", &numBodies);
     
         for (int i = 0; i < numBodies; i++) {
@@ -122,7 +122,7 @@ int main (int argc, char *argv[]) {
 
     unsigned long long tick = 0;
 
-    unsigned int ticks_per_display = 1000;
+    unsigned int ticks_per_display = ticksPerDisplay();
 
     unsigned long long max_ticks = timerPrompt(); 
 
@@ -175,7 +175,9 @@ int main (int argc, char *argv[]) {
         tick++;
     }
     stopTime(&timer);
-    printf("Simulation Elapsed Time:%f s\n",elapsedTime(timer));
     
+    printf("----=====+++ SIMULATION RESULTS +++=====----\n");
+    printf("Elapsed Time: %f s | ",elapsedTime(timer));  printf("Seed: %d | ", seedNum); printf("Ticks/Second: %f | ", secs_per_tick);  printf("Max Ticks: %lu\n", max_ticks);
+ 
     printf("haha lmao\n");
 }
