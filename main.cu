@@ -8,18 +8,20 @@
 #define MAX_LINE_LENGTH 100
 
 struct body bi[256];
-struct body solarSystem[10];
 int randomizedChoice = 0;
 int numBodies;
 
 int filePrompt() {
     int fileChoice;
+    char fileName[100];
 
     printf("Press 1 for simulation from file or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
 
-    if (fileChoice == 1) {  
-       FILE *file = fopen("bodydata.csv", "r");
+    if (fileChoice == 1) {
+       printf("Type in the file name you would like to simulate: ");
+       scanf("%s", &fileName);  
+       FILE *file = fopen(fileName, "r");
        if (file == NULL) {
             printf("Failed to open file\n");
             return 1; 
@@ -28,7 +30,6 @@ int filePrompt() {
         char line[MAX_LINE_LENGTH];
         fgets(line, MAX_LINE_LENGTH, file);
         fgets(line, MAX_LINE_LENGTH, file);
-
 
         int i = 0;
         float temp_mass;
@@ -50,27 +51,29 @@ int filePrompt() {
                 &temp_velocity.y,
                 &temp_velocity.z);
             
-            solarSystem[i].id = i;
-            solarSystem[i].mass = temp_mass;
-            solarSystem[i].radius = temp_radius;
-            solarSystem[i].position = temp_position;
-            solarSystem[i].velocity = temp_velocity;
+            bi[i].id = i;
+            bi[i].mass = temp_mass;
+            bi[i].radius = temp_radius;
+            bi[i].position = temp_position;
+            bi[i].velocity = temp_velocity;
 
             i++;
         }
         fclose(file);
 
+        numBodies = i;
+
         for (int j = 0; j < i; j++) {
-            printf("Body %d:\n", solarSystem[j].id);
-            printf("Mass %e\n", solarSystem[j].mass);
-            printf("Radius: %e\n", solarSystem[j].radius);
-            printf("X Position: %e\n", solarSystem[j].position.x);
-            printf("Y Position: %e\n", solarSystem[j].position.y);
-            printf("Z Position %e\n", solarSystem[j].position.z);
-            printf("X Velocity %e\n", solarSystem[j].velocity.x);
-            printf("Y Velocity %e\n", solarSystem[j].velocity.y);
-            printf("Z Velocity %e\n", solarSystem[j].velocity.z);
-        }
+            printf("Body %d:\n", bi[j].id);
+            printf("Mass %e\n", bi[j].mass);
+            printf("Radius: %e\n", bi[j].radius);
+            printf("X Position: %e\n", bi[j].position.x);
+            printf("Y Position: %e\n", bi[j].position.y);
+            printf("Z Position %e\n", bi[j].position.z);
+            printf("X Velocity %e\n", bi[j].velocity.x);
+            printf("Y Velocity %e\n", bi[j].velocity.y);
+            printf("Z Velocity %e\n", bi[j].velocity.z);
+        }                  
     }
     
     if (fileChoice == 2) {
@@ -124,7 +127,7 @@ int main (int argc, char *argv[]) {
         }    
 
         if (tick % ticks_per_display == 0) {
-            print_bodies(bi, len, DISTANCE_SCALE/40);
+            print_bodies(bi, len, 2.59e10);//DISTANCE_SCALE/40);
             //print_bodies_numbered(bi, len, DISTANCE_SCALE/40);
         }
 
