@@ -14,12 +14,15 @@ int numBodies;
 
 int filePrompt() {
     int fileChoice;
+    char fileName[100];
 
     printf("Press 1 for solar system simulation or 2 for randomly generated simulation: ");
     scanf("%d", &fileChoice);
 
-    if (fileChoice == 1) {  
-       FILE *file = fopen("bodydata.csv", "r");
+    if (fileChoice == 1) {
+       printf("Type in the file name you would like to simulate: ");
+       scanf("%s", &fileName);  
+       FILE *file = fopen(fileName, "r");
        if (file == NULL) {
             printf("Failed to open file\n");
             return 1; 
