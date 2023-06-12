@@ -19,6 +19,7 @@ float elapsedTime(Timer timer);
 unsigned long timerPrompt();
 float tickTime();
 unsigned int ticksPerDisplay();
+void writeCSV(size_t dataSize, int *data, FILE *fp);
 
 #ifdef __cplusplus
 }
