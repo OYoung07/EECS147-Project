@@ -84,12 +84,12 @@ unsigned int ticksPerDisplay() {
     return userInput;
 }
 
-void writeCSV(size_t dataSize, int *data, FILE *fp) {
+void writeCSV(unsigned int dataSize, double *data, FILE *fp) {
     if (dataSize == 0) return;      //if 0, outputs nothing
     
-    fprintf(fp, "%d", data[0]);     //output first value
-    for (size_t i = 1; i < dataSize; ++i)
-        fprintf(fp, ", %d", data[i]);   //add value and comma
+    fprintf(fp, "%lf", data[0]);     //output first value
+    for (int i = 1; i < dataSize; ++i)
+        fprintf(fp, ", %lf", data[i]);   //add value and comma
     fprintf(fp, "\n");
 }
 

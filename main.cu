@@ -11,6 +11,7 @@ struct body bi[256];
 int do_collisions = 1;
 int numBodies;
 int seedNum;
+FILE *fp = fopen("outputData.csv", "w");
 
 int filePrompt() {
     int fileChoice;
@@ -208,6 +209,10 @@ int main (int argc, char *argv[]) {
     printf("----=====+++ SIMULATION RESULTS +++=====----\n");
     printf("Elapsed Time: %f s | ",elapsedTime(timer));  printf("Seed: %d | ", seedNum); printf("Initial # Bodies: %d\n", numBodies); 
     printf("Max Ticks: %lu | ", max_ticks); printf("Seconds/Tick: %f | ", secs_per_tick); printf("Ticks/Display: %d\n", ticks_per_display);
- 
+    //double *data;
+    
+      
+    writeCSV(1, (int*) &numBodies, fp);
+     
     printf("haha lmao\n");
 }
