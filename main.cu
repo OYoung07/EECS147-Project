@@ -200,7 +200,7 @@ int main (int argc, char *argv[]) {
 
             printf("Bodies:%d, System Mass:%e kg, Kinetic Energy:%e J, Potential Energy:%e J, Total Energy:%e J, Scale=%e meters, Tick=%lu\n", 
                     len, totalmass, totalenergy_k, totalenergy_p, (totalenergy_k - totalenergy_p), autoscale, tick);
-            data[0] = tick; data[1] = len; data[2] = totalmass; data[3] = totalenergy_p; data[4] = (totalenergy_k - totalenergy_p); data[5] = autoscale;    
+            data[0] = tick; data[1] = len; data[2] = totalmass; data[3] = totalenergy_k; data[4] = totalenergy_p; data[5] = (totalenergy_k - totalenergy_p);    
             writeCSV(6, data, fp);
         }
 
