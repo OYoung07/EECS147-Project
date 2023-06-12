@@ -8,7 +8,6 @@
 #define MAX_LINE_LENGTH 100
 
 struct body bi[256];
-int do_collisions = 1;
 int numBodies;
 int seedNum;
 
@@ -119,9 +118,9 @@ int filePrompt() {
     */    
 }
 
-int collisionPrompt() {
+void collisionPrompt(int *do_collisions) {
     printf("Press 1 for inelastic collisions and 0 for no collisions: ");
-    scanf("%d", &do_collisions);
+    scanf("%d", do_collisions);
     //printf("%d", do_collisions);
 }
 
@@ -143,7 +142,7 @@ int main (int argc, char *argv[]) {
     
     unsigned long long max_ticks = timerPrompt(); 
     
-    collisionPrompt();
+    collisionPrompt(&do_collisions);
 
     double secs_per_tick = tickTime(); //1 by default
 
