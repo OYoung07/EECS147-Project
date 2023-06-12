@@ -206,7 +206,8 @@ int main (int argc, char *argv[]) {
     stopTime(&timer);
     
     printf("----=====+++ SIMULATION RESULTS +++=====----\n");
-    printf("Elapsed Time: %f s | ",elapsedTime(timer));  printf("Seed: %d | ", seedNum); printf("Seconds/Tick: %f | ", secs_per_tick);  printf("Max Ticks: %lu\n", max_ticks);
+    printf("Elapsed Time: %f s | ",elapsedTime(timer));  printf("Seed: %d | ", seedNum); printf("Initial # Bodies: %d\n", numBodies); 
+    printf("Max Ticks: %lu | ", max_ticks); printf("Seconds/Tick: %f | ", secs_per_tick); printf("Ticks/Display: %d\n", ticks_per_display);
  
     printf("haha lmao\n");
 }
