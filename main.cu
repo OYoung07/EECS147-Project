@@ -11,6 +11,7 @@ struct body bi[256];
 int numBodies;
 int seedNum;
 FILE *fp = fopen("outputData.csv", "w");
+double data[6];
 
 int filePrompt() {
     int fileChoice;
@@ -199,6 +200,8 @@ int main (int argc, char *argv[]) {
 
             printf("Bodies:%d, System Mass:%e kg, Kinetic Energy:%e J, Potential Energy:%e J, Total Energy:%e J, Scale=%e meters, Tick=%lu\n", 
                     len, totalmass, totalenergy_k, totalenergy_p, (totalenergy_k - totalenergy_p), autoscale, tick);
+            data[0] = tick; data[1] = len; data[2] = totalmass; data[3] = totalenergy_p; data[4] = (totalenergy_k - totalenergy_p); data[5] = autoscale;    
+            writeCSV(6, data, fp);
         }
 
         tick++;
@@ -211,7 +214,7 @@ int main (int argc, char *argv[]) {
     //double *data;
     
       
-    writeCSV(1, (int*) &numBodies, fp);
+    //writeCSV(1, (int*) &numBodies, fp);
      
     printf("haha lmao\n");
 }
