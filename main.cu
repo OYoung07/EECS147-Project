@@ -8,7 +8,7 @@
 #define MAX_LINE_LENGTH 100
 
 struct body bi[256];
-int randomizedChoice = 0;
+int do_collisions = 1;
 int numBodies;
 int seedNum;
 
@@ -73,14 +73,12 @@ int filePrompt() {
     }
     
     if (fileChoice == 2) {
-        randomizedChoice = 1;
-
         printf("Enter a seed number: ");
         scanf("%d", &seedNum);
         srand(seedNum);
         printf("Enter the number of bodies you want to simulate [MAX:256] : ");
         scanf("%d", &numBodies);
-   
+
         /* 
         bi[0].mass = 1e24;
         bi[0].radius = 2000e3;
@@ -121,6 +119,11 @@ int filePrompt() {
     */    
 }
 
+int collisionPrompt() {
+    printf("Press 1 for inelastic collisions and 0 for no collisions: ");
+    scanf("%d", &do_collisions);
+}
+
 int main (int argc, char *argv[]) {
     int userChoice; 
     Timer timer; 
@@ -129,13 +132,17 @@ int main (int argc, char *argv[]) {
     scanf("%d", &userChoice);
     filePrompt();
  
+    int do_collisions = 1;
+
     int len = numBodies;
 
     unsigned long long tick = 0;
 
     unsigned int ticks_per_display = ticksPerDisplay();
-
+    
     unsigned long long max_ticks = timerPrompt(); 
+    
+    collisionPrompt();
 
     double secs_per_tick = tickTime(); //1 by default
 
@@ -164,9 +171,11 @@ int main (int argc, char *argv[]) {
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
             CPU_tick(bi, len, secs_per_tick);
-            len = CPU_collisions(bi, len);
+            if (do_collisions > 0) {
+                len = CPU_collisions(bi, len);
+            }
         } else if ("%d", userChoice == 2) {
-            len = GPU_tick_improved(bi, len, secs_per_tick); 
+            len = GPU_tick_improved(bi, len, secs_per_tick, do_collisions); 
         }    
 
         if (tick % ticks_per_display == 0) {
