@@ -99,9 +99,9 @@ int filePrompt() {
             bi[i].position.x = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             bi[i].position.y = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
             bi[i].position.z = (rand() % DISTANCE_SCALE) - (DISTANCE_SCALE / 2);
-            bi[i].velocity.x = 0;//rand() % 10000 - (10000 / 2);
-            bi[i].velocity.y = 0;//rand() % 10000 - (10000 / 2);
-            bi[i].velocity.z = 0;//rand() % 10000 - (10000 / 2);
+            bi[i].velocity.x = rand() % 10000 - (10000 / 2);
+            bi[i].velocity.y = rand() % 10000 - (10000 / 2);
+            bi[i].velocity.z = rand() % 10000 - (10000 / 2);
         }
     } 
 
@@ -170,6 +170,9 @@ int main (int argc, char *argv[]) {
 
     startTime(&timer);
     /* main while loop */
+    if (do_collisions == 1) {
+        len = CPU_collisions(bi, len); //pre-collide bodies
+    }
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
             CPU_tick(bi, len, secs_per_tick);
