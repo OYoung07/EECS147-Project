@@ -34,10 +34,10 @@ int filePrompt() {
         fgets(line, MAX_LINE_LENGTH, file);
 
         int i = 0;
-        double temp_mass;
-        double temp_radius;
-        double3 temp_position;
-        double3 temp_velocity;
+        float temp_mass;
+        float temp_radius;
+        float3 temp_position;
+        float3 temp_velocity;
 
         while(fgets(line, MAX_LINE_LENGTH, file) != NULL && i < 10) {
             printf(line);
@@ -54,16 +54,16 @@ int filePrompt() {
                 &temp_velocity.z);
             
             bi[i].id = i;
-            bi[i].mass = (double) temp_mass;
-            bi[i].radius = (double) temp_radius;
+            bi[i].mass = (float) temp_mass;
+            bi[i].radius = (float) temp_radius;
             
-            bi[i].position.x = (double) temp_position.x;
-            bi[i].position.y = (double) temp_position.y;
-            bi[i].position.z = (double) temp_position.z;
+            bi[i].position.x = (float) temp_position.x;
+            bi[i].position.y = (float) temp_position.y;
+            bi[i].position.z = (float) temp_position.z;
 
-            bi[i].velocity.x = (double) temp_velocity.x;
-            bi[i].velocity.y = (double) temp_velocity.y;
-            bi[i].velocity.z = (double) temp_velocity.z;
+            bi[i].velocity.x = (float) temp_velocity.x;
+            bi[i].velocity.y = (float) temp_velocity.y;
+            bi[i].velocity.z = (float) temp_velocity.z;
 
             i++;
         }
@@ -146,15 +146,15 @@ int main (int argc, char *argv[]) {
     
     collisionPrompt(&do_collisions);
 
-    double secs_per_tick = tickTime(); //1 by default
+    float secs_per_tick = tickTime(); //1 by default
 
     /* auto scaling code */
     struct body origin;
     origin.position.x = 0;
     origin.position.y = 0;
     origin.position.z = 0;
-    double max_distance = 0;
-    double autoscale;
+    float max_distance = 0;
+    float autoscale;
 
     double totalmass;
     double totalenergy_k;
@@ -214,7 +214,7 @@ int main (int argc, char *argv[]) {
     printf("----=====+++ SIMULATION RESULTS +++=====----\n");
     printf("Elapsed Time: %f s | ",elapsedTime(timer));  printf("Seed: %d | ", seedNum); printf("Initial # Bodies: %d\n", numBodies); 
     printf("Max Ticks: %lu | ", max_ticks); printf("Seconds/Tick: %f | ", secs_per_tick); printf("Ticks/Display: %d\n", ticks_per_display);
-    //double *data;
+    //float *data;
     
       
     //writeCSV(1, (int*) &numBodies, fp);

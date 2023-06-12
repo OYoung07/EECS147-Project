@@ -5,7 +5,7 @@
 #define SHARED_MEM_SIZE 256
 
 //get distance between two bodies
-__device__ double GPU_distance(struct body* b1, struct body* b2) {
+__device__ float GPU_distance(struct body* b1, struct body* b2) {
     return sqrt(pow(b2->position.x - b1->position.x, 2) + 
                 pow(b2->position.y - b1->position.y, 2) + 
                 pow(b2->position.z - b1->position.z, 2));
@@ -13,9 +13,9 @@ __device__ double GPU_distance(struct body* b1, struct body* b2) {
 
 
 //get gravity force magnitude between two bodies
-__device__ double GPU_calculate_FG(struct body* b1, struct body* b2) {
-    double G = 6.674e-11;
-    double d = GPU_distance(b1, b2);
+__device__ float GPU_calculate_FG(struct body* b1, struct body* b2) {
+    float G = 6.674e-11;
+    float d = GPU_distance(b1, b2);
     double mag_F; 
 
     mag_F = (G *(double)b1->mass *(double)b2->mass)/pow(d, 2); //gravity formula
@@ -24,9 +24,9 @@ __device__ double GPU_calculate_FG(struct body* b1, struct body* b2) {
 }
 
 //get direction vector between two bodies
-__device__ double3 GPU_get_direction_vector(struct body* origin, struct body* actor) {
-    double3 direction;
-    double norm = GPU_distance(origin, actor);
+__device__ float3 GPU_get_direction_vector(struct body* origin, struct body* actor) {
+    float3 direction;
+    float norm = GPU_distance(origin, actor);
 
     direction = actor->position - origin->position;
     direction = direction / norm;
@@ -35,18 +35,18 @@ __device__ double3 GPU_get_direction_vector(struct body* origin, struct body* ac
 }
 
 /* calculate acceleration of origin as exerted by actor */
-__device__ double3 GPU_get_accel_vector(struct body* origin, struct body* actor) {
-    double F = GPU_calculate_FG(origin, actor);
-    double3 dir = GPU_get_direction_vector(origin, actor);
+__device__ float3 GPU_get_accel_vector(struct body* origin, struct body* actor) {
+    float F = GPU_calculate_FG(origin, actor);
+    float3 dir = GPU_get_direction_vector(origin, actor);
 
-    double3 F_vec = dir * F; //get force vector
-    double3 A_vec = F_vec / origin->mass; //F = MA -> A = F/M
+    float3 F_vec = dir * F; //get force vector
+    float3 A_vec = F_vec / origin->mass; //F = MA -> A = F/M
 
     return A_vec;
 }
 
 //better GPU kernel
-__global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigned int num_bodies, const double t, unsigned int* collisions) {
+__global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigned int num_bodies, const float t, unsigned int* collisions) {
     __shared__ struct body temp_bodies_shared[SHARED_MEM_SIZE]; 
 
     unsigned int tx = threadIdx.x;
@@ -54,7 +54,7 @@ __global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigne
 
     unsigned int index = tx + (bx * BLOCK_SIZE);
 
-    double3 a;
+    float3 a;
 
     if (index < num_bodies) { //populate shared memory
         temp_bodies_shared[index] = output_bodies[index]; 
@@ -98,7 +98,7 @@ __global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigne
     }
 }
 
-unsigned int GPU_tick_improved(struct body* CPU_bodies, unsigned int num_bodies, const double &t, const char do_collisions) {
+unsigned int GPU_tick_improved(struct body* CPU_bodies, unsigned int num_bodies, const float &t, const char do_collisions) {
     cudaError_t cuda_ret;
     struct body* GPU_bodies;
 
@@ -120,7 +120,7 @@ unsigned int GPU_tick_improved(struct body* CPU_bodies, unsigned int num_bodies,
     cudaDeviceSynchronize();
  
     dim3 DimBlock(BLOCK_SIZE, 1, 1);
-    dim3 DimGrid(ceil((double)num_bodies/((double)BLOCK_SIZE)), 1, 1);
+    dim3 DimGrid(ceil((float)num_bodies/((float)BLOCK_SIZE)), 1, 1);
     GPU_tick_shared_memory<<<DimGrid,DimBlock>>>(GPU_bodies, num_bodies, t, GPU_collisions);
 
     cuda_ret = cudaDeviceSynchronize();

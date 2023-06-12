@@ -4,9 +4,9 @@
 
 #define MAX_BODIES 256
 
-/* operator overloading for double3 */
-__device__ __host__  double3 operator+(const double3 &a, const double3 &b) {
-    double3 c;
+/* operator overloading for float3 */
+__device__ __host__  float3 operator+(const float3 &a, const float3 &b) {
+    float3 c;
 
     c.x = a.x + b.x; 
     c.y = a.y + b.y; 
@@ -15,8 +15,8 @@ __device__ __host__  double3 operator+(const double3 &a, const double3 &b) {
     return c;
 }
 
-__device__  __host__ double3 operator-(const double3 &a, const double3 &b) {
-    double3 c;
+__device__  __host__ float3 operator-(const float3 &a, const float3 &b) {
+    float3 c;
 
     c.x = a.x - b.x;
     c.y = a.y - b.y;
@@ -25,8 +25,8 @@ __device__  __host__ double3 operator-(const double3 &a, const double3 &b) {
     return c;
 }
 
-__device__  __host__ double3 operator*(const double3 &a, const double &b) {
-    double3 c;
+__device__  __host__ float3 operator*(const float3 &a, const float &b) {
+    float3 c;
 
     c.x = a.x * b;
     c.y = a.y * b;
@@ -35,8 +35,8 @@ __device__  __host__ double3 operator*(const double3 &a, const double &b) {
     return c;
 }
 
-__device__  __host__ double3 operator/(const double3 &a, const double &b) {
-    double3 c;
+__device__  __host__ float3 operator/(const float3 &a, const float &b) {
+    float3 c;
     
     c.x = a.x / b;
     c.y = a.y / b;
@@ -45,7 +45,7 @@ __device__  __host__ double3 operator/(const double3 &a, const double &b) {
     return c;
 }
 
-void print_double3(const double3 &f) {
+void print_float3(const float3 &f) {
     printf("(%e,%e,%e)", f.x, f.y, f.z);
 }
 
@@ -54,45 +54,45 @@ void print_body(struct body* b) {
     printf("Mass:%e\n",b->mass);
     printf("Radius:%e\n",b->radius);
     printf("Position:");
-    print_double3(b->position);
+    print_float3(b->position);
     printf("\nVelocity:");
-    print_double3(b->velocity);
+    print_float3(b->velocity);
     printf("\n");
 }
 
 //get distance between two bodies
-double distance(struct body* b1, struct body* b2) {
+float distance(struct body* b1, struct body* b2) {
     return sqrt(pow(b2->position.x - b1->position.x, 2) + 
                 pow(b2->position.y - b1->position.y, 2) + 
                 pow(b2->position.z - b1->position.z, 2));
 }
 
 //get gravity force magnitude between two bodies
-double calculate_FG(struct body* b1, struct body* b2) {
-    double G = 6.674e-11;
-    double d = distance(b1, b2);
+float calculate_FG(struct body* b1, struct body* b2) {
+    float G = 6.674e-11;
+    float d = distance(b1, b2);
     double mag_F; 
 
     mag_F = (G * (double)b1->mass *(double)b2->mass)/pow(d, 2); //gravity formula
 
-    return (double)mag_F;
+    return (float)mag_F;
 }
 
 //get gravitional energy
-double calculate_EG(struct body* b1, struct body* b2) {
-    double G = 6.674e-11;
-    double d = distance(b1, b2);
+float calculate_EG(struct body* b1, struct body* b2) {
+    float G = 6.674e-11;
+    float d = distance(b1, b2);
     double mag_F; 
 
     mag_F = (G * (double)b1->mass *(double)b2->mass)/d; //gravity formula
 
-    return (double)mag_F;
+    return (float)mag_F;
 }
 
 //get direction vector between two bodies
-double3 get_direction_vector(struct body* origin, struct body* actor) {
-    double3 direction;
-    double norm = distance(origin, actor);
+float3 get_direction_vector(struct body* origin, struct body* actor) {
+    float3 direction;
+    float norm = distance(origin, actor);
 
     direction = actor->position - origin->position;
     direction = direction / norm;
@@ -101,27 +101,27 @@ double3 get_direction_vector(struct body* origin, struct body* actor) {
 }
 
 /* calculate acceleration of origin as exerted by actor */
-double3 get_accel_vector(struct body* origin, struct body* actor) {
-    double F = calculate_FG(origin, actor);
-    double3 dir = get_direction_vector(origin, actor);
+float3 get_accel_vector(struct body* origin, struct body* actor) {
+    float F = calculate_FG(origin, actor);
+    float3 dir = get_direction_vector(origin, actor);
 
-    double3 F_vec = dir * F; //get force vector
-    double3 A_vec = F_vec / origin->mass; //F = MA -> A = F/M
+    float3 F_vec = dir * F; //get force vector
+    float3 A_vec = F_vec / origin->mass; //F = MA -> A = F/M
 
     return A_vec;
 }
 
-double magnitude(double3 v) {
+float magnitude(float3 v) {
     return sqrt(pow(v.x,2) + pow(v.y,2) + pow(v.z,2));
 }
 
-double get_body_energy(struct body* b) {
+float get_body_energy(struct body* b) {
     return (0.5 * b->mass * pow(magnitude(b->velocity),2.0)); //0.5mv^2
 }
 
 //calculate mean acceleration vector from all other bodies
-double3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &num_bodies) {
-    double3 accel;
+float3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &num_bodies) {
+    float3 accel;
     accel.x = 0;
     accel.y = 0;
     accel.z = 0;    
@@ -136,7 +136,7 @@ double3 CPU_reduce_accel_vectors(struct body b, struct body* bodies, const int &
 }
 
 //get barycenter of two bodies
-__device__ __host__ double3 get_barycenter(struct body* a, struct body* b) {
+__device__ __host__ float3 get_barycenter(struct body* a, struct body* b) {
     return ((a->position * a->mass) + (b->position * b->mass))/(a->mass + b->mass);
 }
 
@@ -240,8 +240,8 @@ unsigned int CPU_collisions(struct body* bodies, int num_bodies) {
     return num_bodies;
 }
 
-void CPU_tick(struct body* bodies, const int &num_bodies, const double &t) {
-    double3 a;    
+void CPU_tick(struct body* bodies, const int &num_bodies, const float &t) {
+    float3 a;    
 
     /* allocate temp array for calculation */
     struct body* temp_bodies;
@@ -262,10 +262,10 @@ void CPU_tick(struct body* bodies, const int &num_bodies, const double &t) {
     free(temp_bodies); //memory leaks are bad
 }
 
-void print_bodies(struct body* bodies, const int &num_bodies, const double &tile_scale) {
+void print_bodies(struct body* bodies, const int &num_bodies, const float &tile_scale) {
     char map[40][40];
-    double y_index;
-    double x_index;    
+    float y_index;
+    float x_index;    
 
     //draw true to size
     for (int y = 0; y < 40; y++) {
@@ -301,7 +301,7 @@ void print_bodies(struct body* bodies, const int &num_bodies, const double &tile
     }
 }
 
-void print_bodies_numbered(struct body* bodies, const int &num_bodies, const double &tile_scale) {
+void print_bodies_numbered(struct body* bodies, const int &num_bodies, const float &tile_scale) {
     char map[40][40];
     int y_index;
     int x_index;    
