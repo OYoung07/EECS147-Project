@@ -122,6 +122,7 @@ int filePrompt() {
 int collisionPrompt() {
     printf("Press 1 for inelastic collisions and 0 for no collisions: ");
     scanf("%d", &do_collisions);
+    //printf("%d", do_collisions);
 }
 
 int main (int argc, char *argv[]) {
@@ -132,7 +133,7 @@ int main (int argc, char *argv[]) {
     scanf("%d", &userChoice);
     filePrompt();
  
-    int do_collisions = 1;
+    char do_collisions = 1;
 
     int len = numBodies;
 
