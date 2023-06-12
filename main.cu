@@ -129,6 +129,8 @@ int main (int argc, char *argv[]) {
     scanf("%d", &userChoice);
     filePrompt();
  
+    char do_collisions = 1;
+
     int len = numBodies;
 
     unsigned long long tick = 0;
@@ -164,9 +166,11 @@ int main (int argc, char *argv[]) {
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
             CPU_tick(bi, len, secs_per_tick);
-            len = CPU_collisions(bi, len);
+            if (do_collisions > 0) {
+                len = CPU_collisions(bi, len);
+            }
         } else if ("%d", userChoice == 2) {
-            len = GPU_tick_improved(bi, len, secs_per_tick); 
+            len = GPU_tick_improved(bi, len, secs_per_tick, do_collisions); 
         }    
 
         if (tick % ticks_per_display == 0) {

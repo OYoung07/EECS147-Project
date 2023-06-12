@@ -98,7 +98,7 @@ __global__ void GPU_tick_shared_memory(struct body* output_bodies, const unsigne
     }
 }
 
-unsigned int GPU_tick_improved(struct body* CPU_bodies, unsigned int num_bodies, const double &t) {
+unsigned int GPU_tick_improved(struct body* CPU_bodies, unsigned int num_bodies, const double &t, const char do_collisions) {
     cudaError_t cuda_ret;
     struct body* GPU_bodies;
 
@@ -136,7 +136,7 @@ unsigned int GPU_tick_improved(struct body* CPU_bodies, unsigned int num_bodies,
     cudaFree(GPU_collisions);
     cudaFree(GPU_bodies);
 
-    if (collisions > 0) {
+    if (collisions > 0 && do_collisions > 0) {
        num_bodies = CPU_collisions(CPU_bodies, num_bodies); 
     }
 
