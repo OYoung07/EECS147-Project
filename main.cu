@@ -133,7 +133,7 @@ int main (int argc, char *argv[]) {
     scanf("%d", &userChoice);
     filePrompt();
  
-    char do_collisions = 1;
+    int do_collisions = 1;
 
     int len = numBodies;
 
@@ -172,7 +172,7 @@ int main (int argc, char *argv[]) {
     while (tick < max_ticks) {
         if ("%d", userChoice == 1) {
             CPU_tick(bi, len, secs_per_tick);
-            if (do_collisions > 0) {
+            if (do_collisions == 1) {
                 len = CPU_collisions(bi, len);
             }
         } else if ("%d", userChoice == 2) {
